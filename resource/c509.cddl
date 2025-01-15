@@ -1,42 +1,50 @@
-oid = #6.111(bstr)
+; should be as defined in https://www.rfc-editor.org/rfc/rfc9090.html
+; i.e. oid = #6.111(bstr), but all oid usages are unwrapped and
+; zcbor does not support unwrapping, so oid in unwrapped here manually
+; as well as the other types
 
-C509Certificate = [
+unwrapped_oid = bstr
+unwrapped_time = number
+unwrapped_biguint = bstr
+
+C509Certificate = [                                                                 ; Taken from https://datatracker.ietf.org/doc/draft-ietf-cose-cbor-encoded-cert/
    TBSCertificate,
    issuerSignatureValue : any
 ]
 
+; The elements of the following group are used in a CBOR Sequence:
 TBSCertificate = (
    c509CertificateType: int,
    certificateSerialNumber: CertificateSerialNumber,
    issuerSignatureAlgorithm: AlgorithmIdentifier,
    issuer: Name / null,
-   validityNotBefore: time,
-   validityNotAfter: time / null,
+   validityNotBefore: unwrapped_time,
+   validityNotAfter: unwrapped_time / null,
    subject: Name,
    subjectPublicKeyAlgorithm: AlgorithmIdentifier,
    subjectPublicKey: any,
    extensions: Extensions,
 )
 
-CertificateSerialNumber = biguint
+CertificateSerialNumber = unwrapped_biguint
 
 Name = [ * Attribute ] / text / bytes
 
 Attribute = ( attributeTypeInt: int, attributeValueText: text ) //
-            ( attributeTypeOID: oid, attributeValueBytes: bytes )
+            ( attributeTypeOID: unwrapped_oid, attributeValueBytes: bytes )
 
-AlgorithmIdentifier = int / oid / [ algorithm: oid, parameters: bytes ]
+AlgorithmIdentifier = int / unwrapped_oid / [ algorithm: unwrapped_oid, parameters: bytes ]
 
 Extensions = [ * Extension ] / int
 Extension = ( extensionIDInt: int, extensionValueAny: any ) // 
-            ( extensionIDOID: oid, ? critical: true, extensionValueBytes: bytes )
+            ( extensionIDOid: unwrapped_oid, ? critical: true, extensionValueBytes: bytes )
 
 KeyIdentifier = bytes
 SubjectKeyIdentifier = KeyIdentifier
 
 KeyUsage = int
 
-PolicyMappings = [ + (issuerDomainPolicy: oid, subjectDomainPolicy: oid) ]
+PolicyMappings = [ + (issuerDomainPolicy: unwrapped_oid, subjectDomainPolicy: unwrapped_oid) ]
 
 BasicConstraints = int
 
@@ -45,7 +53,7 @@ PolicyConstraints = [
    inhibitPolicyMapping: uint / null,
 ]
 
-KeyPurposeId = int / oid
+KeyPurposeId = int / unwrapped_oid
 ExtKeyUsageSyntax = [ 2* KeyPurposeId ] / KeyPurposeId
 
 InhibitAnyPolicy = uint
@@ -59,7 +67,7 @@ IssuerAltName  = GeneralNames / text
 DistributionPointName = [ 2* text ] / text
 CRLDistributionPoints = [ + DistributionPointName ]
 
-AccessDescription = ( accessMethod: int / oid , uri: text )
+AccessDescription = ( accessMethod: int / unwrapped_oid , uri: text )
 AuthorityInfoAccessSyntax = [ + AccessDescription ]
 
 KeyIdentifierArray = [
@@ -69,9 +77,9 @@ KeyIdentifierArray = [
 ]
 AuthorityKeyIdentifier = KeyIdentifierArray / KeyIdentifier
 
-PolicyIdentifier = int / oid
+PolicyIdentifier = int / unwrapped_oid
 PolicyQualifierInfo = (
-  policyQualifierId: int / oid,
+  policyQualifierId: int / unwrapped_oid,
   qualifier: text,
 )
 CertificatePolicies = [
@@ -85,7 +93,7 @@ NameConstraints = [
 ]
 
 Attributes = ( attributeTypesInt: int, attributeValuesText: [+text] ) //
-             ( attributeTypesOID: oid, attributeValuesBytes: [+bytes] )
+             ( attributeTypesOID: unwrapped_oid, attributeValuesBytes: [+bytes] )
 SubjectDirectoryAttributes = [+Attributes]
 
 ASIdOrRange = uint / [min:uint, max:uint]

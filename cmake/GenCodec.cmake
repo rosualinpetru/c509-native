@@ -62,7 +62,6 @@ function(generate_cddl_codec CDDL_FILE_PATH)
         --output-cmake ${OUTPUT_DIR}/cmake/gen.cmake
         --git-sha-header
         --time-header
-        --short-names
         -t All
         --dq 1024
     )

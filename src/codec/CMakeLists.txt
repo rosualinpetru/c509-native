@@ -11,6 +11,4 @@ target_include_directories(c509_codec
 target_link_libraries(c509_codec
     PUBLIC
     c509_common
-    PRIVATE
-    zcbor
 )

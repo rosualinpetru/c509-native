@@ -1,19 +1,19 @@
-#ifndef __C509__ATTRIBUTE_H
-#define __C509__ATTRIBUTE_H
+#ifndef __C509_ATTRIBUTE_H
+#define __C509_ATTRIBUTE_H
 
 #include <cstddef>
 #include <cstdint>
+#include <array>
 
-#include "defs.hpp"
-#include "util.hpp"
+#include "oid.hpp"
 
 namespace C509
 {
     // WARNING
-    constexpr size_t MAX_ATTRIBUTE_VALUE_TSTR_BYTES = 4096;
+    constexpr size_t MAX_ATTRIBUTE_VALUE_TSTR_BYTES = 256;
 
     // WARNING
-    constexpr size_t MAX_ATTRIBUTE_VALUE_BSTR_BYTES = 4096;
+    constexpr size_t MAX_ATTRIBUTE_VALUE_BSTR_BYTES = 256;
 
     struct Attribute
     {
@@ -28,16 +28,16 @@ namespace C509
             struct
             {
                 const uint8_t attributeType;
-                const array<uint8_t, MAX_ATTRIBUTE_VALUE_TSTR_BYTES> attributeValue;
+                const std::array<uint8_t, MAX_ATTRIBUTE_VALUE_TSTR_BYTES> attributeValue;
             } const intAttribute;
 
             struct
             {
                 const OID attributeType;
-                const array<uint8_t, MAX_ATTRIBUTE_VALUE_BSTR_BYTES> attributeValue;
+                const std::array<uint8_t, MAX_ATTRIBUTE_VALUE_BSTR_BYTES> attributeValue;
             } const oidAttribute;
         };
     };
 }
 
-#endif // __C509__ATTRIBUTE_H
+#endif // __C509_ATTRIBUTE_H

@@ -3,15 +3,15 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <array>
 #include <optional>
 
-#include "defs.hpp"
-#include "util.hpp"
+#include "oid.hpp"
 
 namespace C509
 {
     // WARNING
-    constexpr size_t MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES = 4096;
+    constexpr size_t MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES = 512;
 
     struct AlgorithmIdentifier
     {
@@ -27,7 +27,7 @@ namespace C509
             struct
             {
                 const OID algorithmIdentifier;
-                const std::optional<array<uint8_t, MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES>> parameters;
+                const std::optional<std::array<uint8_t, MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES>> parameters;
             } const oidAlgorithmIdentifier;
         };
     };

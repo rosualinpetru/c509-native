@@ -1,5 +1,5 @@
-#ifndef __C509__TBSCERTIFICATE_H
-#define __C509__TBSCERTIFICATE_H
+#ifndef __C509_TBSCERTIFICATE_H
+#define __C509_TBSCERTIFICATE_H
 
 #include <cstddef>
 #include <cstdint>
@@ -9,23 +9,22 @@
 #include "algid.hpp"
 #include "name.hpp"
 #include "pk.hpp"
-#include "util.hpp"
 
 namespace C509
 {
     struct TBSCertificate
     {
-        const uint8_t c509CertificateType;
-        const CertificateSerialNumber certificateSerialNumber;
-        const AlgorithmIdentifier issuerSignatureAlgorithm;
-        const std::optional<Name> issuer;
-        const uint32_t validityNotBefore;
-        const std::optional<uint32_t> validityNotAfter;
-        const Name subject;
-        const AlgorithmIdentifier subjectPublicKeyAlgorithm;
-        const SubjectPublicKey subjectPublicKey;
-        // const Extensions extensions;
+        uint8_t c509CertificateType;
+        CertificateSerialNumber certificateSerialNumber;
+        AlgorithmIdentifier issuerSignatureAlgorithm;
+        std::optional<Name> issuer;
+        uint32_t validityNotBefore;
+        std::optional<uint32_t> validityNotAfter;
+        Name subject;
+        AlgorithmIdentifier subjectPublicKeyAlgorithm;
+        SubjectPublicKey subjectPublicKey;
+        // Extensions extensions;
     };
 }
 
-#endif // __C509__TBSCERTIFICATE_H
+#endif // __C509_TBSCERTIFICATE_H

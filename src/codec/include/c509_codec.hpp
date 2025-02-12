@@ -1,26 +1,14 @@
 #ifndef __C509_C509_CODEC_H
 #define __C509_C509_CODEC_H
 
-#include "cbor_codec.hpp"
+#include <zcbor_common.h>
+
 #include "c509_types.hpp"
 
-using namespace C509;
-
-#define DECLARE_C509_CBOR_CODEC(Type)                      \
-    template <>                                            \
-    struct C509::CBORCodec<Type>                           \
-    {                                                      \
-        static inline CBORState encode(const Type &input); \
-        static inline Type decode(const CBORState &input); \
-    };
-
-DECLARE_C509_CBOR_CODEC(Certificate)
-DECLARE_C509_CBOR_CODEC(TBSCertificate)
-DECLARE_C509_CBOR_CODEC(CertificateSerialNumber)
-DECLARE_C509_CBOR_CODEC(AlgorithmIdentifier)
-DECLARE_C509_CBOR_CODEC(Name)
-DECLARE_C509_CBOR_CODEC(Attribute)
-DECLARE_C509_CBOR_CODEC(SubjectPublicKey)
-DECLARE_C509_CBOR_CODEC(IssuerSignatureValue)
+namespace C509
+{
+    int encode(uint8_t *payload, size_t payload_len, const Certificate *input, size_t *payload_len_out);
+    int decode(const uint8_t *payload, size_t payload_len, Certificate *result, size_t *payload_len_out);
+}
 
 #endif // __C509_C509_CODEC_H

@@ -1,22 +1,21 @@
-#ifndef __C509__NAME_H
-#define __C509__NAME_H
+#ifndef __C509_NAME_H
+#define __C509_NAME_H
 
 #include <cstddef>
 #include <cstdint>
 
 #include "attr.hpp"
-#include "util.hpp"
 
 namespace C509
 {
     // WARNING
-    constexpr size_t MAX_NAME_ATTRIBUTES = 32;
+    constexpr size_t MAX_NAME_ATTRIBUTES = 16;
 
     // WARNING
-    constexpr size_t MAX_NAME_TSTR_BYTES = 4096;
+    constexpr size_t MAX_NAME_TSTR_BYTES = 512;
 
     // WARNING
-    constexpr size_t MAX_NAME_BSTR_BYTES = 4096;
+    constexpr size_t MAX_NAME_BSTR_BYTES = 512;
 
     struct Name
     {
@@ -29,11 +28,11 @@ namespace C509
 
         union
         {
-            const array<Attribute, MAX_NAME_ATTRIBUTES> attributes;
-            const array<uint8_t, MAX_NAME_TSTR_BYTES> text;
-            const array<uint8_t, MAX_NAME_BSTR_BYTES> bytes;
+            const std::array<Attribute, MAX_NAME_ATTRIBUTES> attributes;
+            const std::array<uint8_t, MAX_NAME_TSTR_BYTES> text;
+            const std::array<uint8_t, MAX_NAME_BSTR_BYTES> bytes;
         };
     };
 }
 
-#endif // __C509__NAME_H
+#endif // __C509_NAME_H

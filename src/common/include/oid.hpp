@@ -4,15 +4,16 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "structures.hpp"
+
+// Defined in https://datatracker.ietf.org/doc/html/rfc2578#section-3.5
+#define MAX_OID_SUBIDS 128
+
 namespace C509
 {
-    // Defined in https://datatracker.ietf.org/doc/html/rfc2578#section-3.5
-    constexpr size_t MAX_OID_SUBIDS = 128;
-
     struct OID
     {
-        const uint32_t *subids;
-        size_t size;
+        bounded_array<uint32_t, MAX_OID_SUBIDS> subids;
     };
 }
 

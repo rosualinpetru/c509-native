@@ -5,6 +5,7 @@
 #include <cstdint>
 
 #include "attr.hpp"
+#include "structures.hpp"
 
 namespace C509
 {
@@ -28,9 +29,9 @@ namespace C509
 
         union
         {
-            const std::array<Attribute, MAX_NAME_ATTRIBUTES> attributes;
-            const std::array<uint8_t, MAX_NAME_TSTR_BYTES> text;
-            const std::array<uint8_t, MAX_NAME_BSTR_BYTES> bytes;
+            const bounded_array<Attribute, MAX_NAME_ATTRIBUTES> attributes;
+            const bounded_array<uint8_t, MAX_NAME_TSTR_BYTES> text;
+            const bounded_array<uint8_t, MAX_NAME_BSTR_BYTES> bytes;
         };
     };
 }

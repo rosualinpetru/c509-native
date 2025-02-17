@@ -3,12 +3,12 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <optional>
 
 #include "csn.hpp"
 #include "algid.hpp"
 #include "name.hpp"
 #include "pk.hpp"
+#include "structures.hpp"
 
 namespace C509
 {
@@ -17,9 +17,9 @@ namespace C509
         uint8_t c509CertificateType;
         CertificateSerialNumber certificateSerialNumber;
         AlgorithmIdentifier issuerSignatureAlgorithm;
-        std::optional<Name> issuer;
+        optional<Name> issuer;
         uint32_t validityNotBefore;
-        std::optional<uint32_t> validityNotAfter;
+        optional<uint32_t> validityNotAfter;
         Name subject;
         AlgorithmIdentifier subjectPublicKeyAlgorithm;
         SubjectPublicKey subjectPublicKey;

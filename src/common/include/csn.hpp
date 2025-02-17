@@ -4,7 +4,7 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "util.hpp"
+#include "structures.hpp"
 
 namespace C509
 {
@@ -13,7 +13,7 @@ namespace C509
 
     struct CertificateSerialNumber
     {
-        const bounded_array<uint8_t, MAX_CSN_BYTES> bytes;
+        bounded_array<uint8_t, MAX_CSN_BYTES> bytes;
     };
 }
 

@@ -4,13 +4,15 @@
 #include <cstdint>
 #include <array>
 
+#include "structures.hpp"
+
 namespace C509
 {
     // WARNING
     // temporary until actually implementing the parsing of pq signatures
     struct SubjectPublicKey
     {
-        const std::array<uint8_t, 32> bytes;
+        const bounded_array<uint8_t, 32> bytes;
     };
 }
 

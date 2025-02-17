@@ -25,6 +25,7 @@ include(Docs)
 ### External libraries
 
 # zcbor 
+# add_compile_definitions(ZCBOR_VERBOSE=1) # useful for debugging
 add_git_submodule(${EXTERNAL_DIR}/zcbor)
 
 # liboqs 

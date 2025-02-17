@@ -7,6 +7,22 @@
 #include <zcbor_decode.h>
 #include <zcbor_print.h>
 
+// ERRORS
+
+// CSN
+#define C509_ERR_CSN_ENC_INVALID_INPUT 509'000'000
+
+#define C509_ERR_CSN_DEC_BSTR_FAILED 509'000'001
+#define C509_ERR_CSN_DEC_EXCEEDED_LENGTH 509'000'002
+#define C509_ERR_CSN_DEC_BUFF_COPY 509'000'003
+
+// OID
+#define C509_ERR_OID_ENC_INVALID_INPUT 509'001'000
+
+#define C509_ERR_OID_DEC_BSTR_FAILED 509'001'001
+#define C509_ERR_OID_DEC_INVALID_LENGTH 509'001'002
+#define C509_ERR_OID_DEC_MALFORMED 509'001'003
+
 #define DECLARE_C509_CBOR_CODEC_SPECIALIZATION(Type)                 \
     template <>                                                      \
     struct CBORCodec<Type>                                           \
@@ -44,5 +60,11 @@ namespace C509
             zcbor_log("%s success\r\n", func);                                             \
         }                                                                                  \
     } while (0)
+
+#define fail(message, error) \
+    {                        \
+        zcbor_log(message);  \
+        ZCBOR_ERR(error);    \
+    }
 
 #endif // __C509_CBOR_CODEC_H

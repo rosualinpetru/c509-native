@@ -3,10 +3,9 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <array>
-#include <optional>
 
 #include "oid.hpp"
+#include "structures.hpp"
 
 namespace C509
 {
@@ -19,16 +18,16 @@ namespace C509
         {
             Int,
             OID
-        } const type;
+        } type;
 
         union
         {
-            const uint8_t intAlgorithmIdentifier;
+            int16_t intAlgorithmIdentifier;
             struct
             {
-                const OID algorithmIdentifier;
-                const std::optional<std::array<uint8_t, MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES>> parameters;
-            } const oidAlgorithmIdentifier;
+                OID algorithmIdentifier;
+                optional<bounded_array<uint8_t, MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES>> parameters;
+            } oidAlgorithmIdentifier;
         };
     };
 }

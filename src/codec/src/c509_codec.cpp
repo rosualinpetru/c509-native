@@ -29,6 +29,6 @@ namespace C509
             states,
             (zcbor_decoder_t *)CBORCodec<Certificate>::decode,
             sizeof(states) / sizeof(zcbor_state_t),
-            1);
+            2);
     }
 }

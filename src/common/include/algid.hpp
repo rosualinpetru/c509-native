@@ -7,11 +7,10 @@
 #include "oid.hpp"
 #include "structures.hpp"
 
+#define MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES 512
+
 namespace C509
 {
-    // WARNING
-    constexpr size_t MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES = 512;
-
     struct AlgorithmIdentifier
     {
         enum class Type

@@ -4,7 +4,7 @@
 
 using namespace C509;
 
-TEST_CASE("CertificateSerialNumber Codec")
+TEST_CASE("CertificateSerialNumber Encoding")
 {
     // Input
     CertificateSerialNumber csn;

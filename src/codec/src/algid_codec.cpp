@@ -37,37 +37,41 @@ bool CBORCodec<AlgorithmIdentifier>::decode(zcbor_state_t *state, AlgorithmIdent
 {
     zcbor_log("%s\r\n", __PRETTY_FUNCTION__);
 
-    bool res = false;
+    bool res;
 
+    // Try decoding as an integer
     int32_t int_value;
-    zcbor_string str;
 
-    if (zcbor_int32_decode(state, &int_value))
+    if ((res = zcbor_int32_decode(state, &int_value)))
     {
         output.type = AlgorithmIdentifier::Type::Int;
         output.intAlgorithmIdentifier = int_value;
-        res = true;
     }
-    else if (CBORCodec<OID>::decode(state, output.oidAlgorithmIdentifier.algorithmIdentifier))
-    {
-        if (zcbor_bstr_decode(state, &str))
-        {
-            if (str.len > MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES)
-                fail("AlgorithmIdentifier parameters exceeded max length", 509005);
-
-            if (!output.oidAlgorithmIdentifier.parameters.value.copy_from(str.value, str.len))
-                fail("Could not copy parsed AlgorithmIdentifier parameters", 509006);
-
-            output.oidAlgorithmIdentifier.parameters.has_value = true;
-        } else {
-            output.oidAlgorithmIdentifier.parameters.has_value = ;
-        }
-
-        res = true;
-    }
+    // Try decoding as an OID
     else
     {
-        fail("Invalid AlgorithmIdentifier encoding", 509007);
+        if ((res = CBORCodec<OID>::decode(state, output.oidAlgorithmIdentifier.algorithmIdentifier)))
+        {
+            output.type = C509::AlgorithmIdentifier::Type::OID;
+
+            zcbor_string str;
+            state->elem_count = state->elem_count + 1;
+            if (zcbor_bstr_decode(state, &str))
+            {
+                if (str.len > MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES)
+                    fail("AlgorithmIdentifier parameters exceeded max length", C509_ERR_ALGID_DEC_EXCEEDED_LENGTH);
+
+                if (!output.oidAlgorithmIdentifier.parameters.value.copy_from(str.value, str.len))
+                    fail("Could not copy parsed AlgorithmIdentifier parameters", C509_ERR_ALGID_DEC_BSTR_FAILED);
+
+                output.oidAlgorithmIdentifier.parameters.has_value = true;
+            }
+            else
+            {
+                output.oidAlgorithmIdentifier.parameters.has_value = false;
+                state->elem_count--;
+            }
+        }
     }
 
     log_result(state, res, __PRETTY_FUNCTION__);

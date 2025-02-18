@@ -776,5 +776,3 @@
 // 	log_result(state, res, __func__);
 // 	return res;
 // }
-
-

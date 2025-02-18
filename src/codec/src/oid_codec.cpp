@@ -9,7 +9,7 @@ bool CBORCodec<OID>::encode(zcbor_state_t *state, const OID &input)
     zcbor_log("%s\r\n", __PRETTY_FUNCTION__);
 
     if (input.subids.len < 2 || input.subids.len > MAX_OID_SUBIDS)
-        fail("OID must have at least two sub-identifiers and at max 128", C509_ERR_OID_ENC_INVALID_INPUT);
+        fail("OID must have at least two sub-identifiers and at max 128", C509_ERR_OID_ENC_INVALID_LENGTH);
 
     uint8_t oid_bytes[MAX_ENCODED_OID_LEN];
     size_t oid_len = 0;

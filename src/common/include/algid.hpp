@@ -4,10 +4,11 @@
 #include <cstddef>
 #include <cstdint>
 
-#include "oid.hpp"
 #include "structures.hpp"
+#include "oid.hpp"
 
-#define MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES 512
+// WARNING
+#define MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES 128
 
 namespace C509
 {

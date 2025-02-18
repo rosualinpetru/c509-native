@@ -42,6 +42,7 @@ bool CBORCodec<AlgorithmIdentifier>::decode(zcbor_state_t *state, AlgorithmIdent
     // Try decoding as an integer
     int32_t int_value;
 
+    state->elem_count = 1;
     if ((res = zcbor_int32_decode(state, &int_value)))
     {
         output.type = AlgorithmIdentifier::Type::Int;
@@ -55,7 +56,8 @@ bool CBORCodec<AlgorithmIdentifier>::decode(zcbor_state_t *state, AlgorithmIdent
             output.type = C509::AlgorithmIdentifier::Type::OID;
 
             zcbor_string str;
-            state->elem_count = state->elem_count + 1;
+
+            state->elem_count = 1;
             if (zcbor_bstr_decode(state, &str))
             {
                 if (str.len > MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES)
@@ -69,7 +71,7 @@ bool CBORCodec<AlgorithmIdentifier>::decode(zcbor_state_t *state, AlgorithmIdent
             else
             {
                 output.oidAlgorithmIdentifier.parameters.has_value = false;
-                state->elem_count--;
+                state->elem_count = 0;
             }
         }
     }

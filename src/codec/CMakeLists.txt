@@ -6,6 +6,7 @@ add_library(c509_codec STATIC
     src/tbscert_codec.cpp
     src/oid_codec.cpp
     src/algid_codec.cpp
+    src/attr_codec.cpp
 )
 
 target_include_directories(c509_codec

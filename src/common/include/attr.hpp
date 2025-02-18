@@ -3,17 +3,18 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <array>
 
+#include "structures.hpp"
 #include "oid.hpp"
+
+// WARNING
+#define MAX_ATTRIBUTE_VALUE_TSTR_BYTES 128
+
+// WARNING
+#define MAX_ATTRIBUTE_VALUE_BSTR_BYTES 128
 
 namespace C509
 {
-    // WARNING
-    constexpr size_t MAX_ATTRIBUTE_VALUE_TSTR_BYTES = 256;
-
-    // WARNING
-    constexpr size_t MAX_ATTRIBUTE_VALUE_BSTR_BYTES = 256;
 
     struct Attribute
     {
@@ -21,21 +22,21 @@ namespace C509
         {
             Int,
             OID
-        } const type;
+        } type;
 
         union
         {
             struct
             {
-                const uint8_t attributeType;
-                const std::array<uint8_t, MAX_ATTRIBUTE_VALUE_TSTR_BYTES> attributeValue;
-            } const intAttribute;
+                uint8_t attributeType;
+                bounded_array<uint8_t, MAX_ATTRIBUTE_VALUE_TSTR_BYTES> attributeValue;
+            } intAttribute;
 
             struct
             {
-                const OID attributeType;
-                const std::array<uint8_t, MAX_ATTRIBUTE_VALUE_BSTR_BYTES> attributeValue;
-            } const oidAttribute;
+                OID attributeType;
+                bounded_array<uint8_t, MAX_ATTRIBUTE_VALUE_BSTR_BYTES> attributeValue;
+            } oidAttribute;
         };
     };
 }

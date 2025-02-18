@@ -49,8 +49,10 @@ bool CBORCodec<OID>::decode(zcbor_state_t *state, OID &output)
     zcbor_log("%s\r\n", __PRETTY_FUNCTION__);
 
     zcbor_string str;
-    bool res = zcbor_bstr_decode(state, &str);
-    if (!res)
+    bool res;
+
+    state->elem_count = 1;
+    if (!(res = zcbor_bstr_decode(state, &str)))
         fail("OID byte string decoding failed", C509_ERR_OID_DEC_BSTR_FAILED);
 
     if (str.len < 1 || str.len > MAX_ENCODED_OID_LEN)

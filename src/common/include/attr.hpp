@@ -1,10 +1,8 @@
 #ifndef __C509_ATTRIBUTE_H
 #define __C509_ATTRIBUTE_H
 
-#include <cstddef>
-#include <cstdint>
-
 #include "structures.hpp"
+
 #include "oid.hpp"
 
 // WARNING
@@ -15,7 +13,6 @@
 
 namespace C509
 {
-
     struct Attribute
     {
         enum class Type
@@ -28,7 +25,7 @@ namespace C509
         {
             struct
             {
-                uint8_t attributeType;
+                uint8_t attributeType; // WARNING: Should be int32_t if compatibility with re-encoded certificates is need.
                 bounded_array<uint8_t, MAX_ATTRIBUTE_VALUE_TSTR_BYTES> attributeValue;
             } intAttribute;
 

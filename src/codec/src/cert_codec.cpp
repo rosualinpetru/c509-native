@@ -2,7 +2,7 @@
 
 using namespace C509;
 
-bool CBORCodec<Certificate>::encode(zcbor_state_t *state, const Certificate &input)
+bool CBORCodec<C509Certificate>::encode_unwrapped(zcbor_state_t *state, const C509Certificate &input)
 {
     zcbor_log("%s\r\n", __PRETTY_FUNCTION__);
 
@@ -14,7 +14,7 @@ bool CBORCodec<Certificate>::encode(zcbor_state_t *state, const Certificate &inp
     return res;
 }
 
-bool CBORCodec<Certificate>::decode(zcbor_state_t *state, Certificate &output)
+bool CBORCodec<C509Certificate>::decode_unwrapped(zcbor_state_t *state, C509Certificate &output)
 {
     zcbor_log("%s\r\n", __PRETTY_FUNCTION__);
 

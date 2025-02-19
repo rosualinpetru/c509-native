@@ -1,9 +1,6 @@
 #ifndef __C509_SUBJECT_PUBLIC_KEY_H
 #define __C509_SUBJECT_PUBLIC_KEY_H
 
-#include <cstdint>
-#include <array>
-
 #include "structures.hpp"
 
 namespace C509

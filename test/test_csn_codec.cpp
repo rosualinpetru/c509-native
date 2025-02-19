@@ -4,6 +4,8 @@
 
 using namespace C509;
 
+static CodecTestHelper codecHelper = CodecTestHelper(2, (zcbor_decoder_t *)CBORCodec<CertificateSerialNumber>::encode, (zcbor_decoder_t *)CBORCodec<CertificateSerialNumber>::decode);
+
 TEST_CASE("CertificateSerialNumber Encoding")
 {
     // Input
@@ -17,7 +19,7 @@ TEST_CASE("CertificateSerialNumber Encoding")
     size_t out_size;
 
     // Encoding
-    int res = CodecTestHelper<CertificateSerialNumber, 2>::encode(out, 21, &csn, &out_size);
+    int res = codecHelper.encode(out, 21, &csn, &out_size);
 
     // Assertions
     REQUIRE(res == ZCBOR_SUCCESS);
@@ -25,7 +27,10 @@ TEST_CASE("CertificateSerialNumber Encoding")
     REQUIRE(out_size == 21);
 
     for (int i = 1; i < out_size; i++)
-        REQUIRE(out[i] == i - 1);
+        SECTION("Checking index " + std::to_string(i))
+        {
+            REQUIRE(HexByte(out[i]) == HexByte(i - 1));
+        }
 }
 
 TEST_CASE("CertificateSerialNumber Decoding")
@@ -43,13 +48,16 @@ TEST_CASE("CertificateSerialNumber Decoding")
     CertificateSerialNumber csn;
 
     // Decoding
-    int res = CodecTestHelper<CertificateSerialNumber, 2>::decode(in, in_size, &csn, NULL);
+    int res = codecHelper.decode(in, in_size, &csn, NULL);
 
     // Assertions
     REQUIRE(res == ZCBOR_SUCCESS);
 
     for (int i = 0; i < csn.bytes.len; i++)
-        REQUIRE(csn.bytes.elements[i] == i);
+        SECTION("Checking index " + std::to_string(i))
+        {
+            REQUIRE(csn.bytes.elements[i] == i);
+        }
 }
 
 TEST_CASE("CertificateSerialNumber Decoding Failure - Exceeds Limit")
@@ -68,7 +76,7 @@ TEST_CASE("CertificateSerialNumber Decoding Failure - Exceeds Limit")
     CertificateSerialNumber csn;
 
     // Decoding
-    int res = CodecTestHelper<CertificateSerialNumber, 2>::decode(in, in_size, &csn, NULL);
+    int res = codecHelper.decode(in, in_size, &csn, NULL);
 
     // Assertions
     REQUIRE(res == C509_ERR_CSN_DEC_EXCEEDED_LENGTH);

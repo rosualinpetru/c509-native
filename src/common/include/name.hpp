@@ -1,23 +1,19 @@
 #ifndef __C509_NAME_H
 #define __C509_NAME_H
 
-#include <cstddef>
-#include <cstdint>
+#include "structures.hpp"
 
 #include "attr.hpp"
-#include "structures.hpp"
+
+// WARNING
+#define MAX_NAME_ATTRIBUTES 16
+// WARNING
+#define MAX_NAME_TSTR_BYTES 512
+// WARNING
+#define MAX_NAME_BSTR_BYTES 512
 
 namespace C509
 {
-    // WARNING
-    constexpr size_t MAX_NAME_ATTRIBUTES = 16;
-
-    // WARNING
-    constexpr size_t MAX_NAME_TSTR_BYTES = 512;
-
-    // WARNING
-    constexpr size_t MAX_NAME_BSTR_BYTES = 512;
-
     struct Name
     {
         enum class Type
@@ -25,13 +21,13 @@ namespace C509
             ATTRIBUTES,
             TEXT,
             BYTES
-        } const type;
+        } type;
 
         union
         {
-            const bounded_array<Attribute, MAX_NAME_ATTRIBUTES> attributes;
-            const bounded_array<uint8_t, MAX_NAME_TSTR_BYTES> text;
-            const bounded_array<uint8_t, MAX_NAME_BSTR_BYTES> bytes;
+            bounded_array<Attribute, MAX_NAME_ATTRIBUTES> attributes;
+            bounded_array<uint8_t, MAX_NAME_TSTR_BYTES> text;
+            bounded_array<uint8_t, MAX_NAME_BSTR_BYTES> bytes;
         };
     };
 }

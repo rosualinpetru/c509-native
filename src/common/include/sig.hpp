@@ -1,9 +1,6 @@
 #ifndef __C509_ISSUER_SIGNATURE_VALUE_H
 #define __C509_ISSUER_SIGNATURE_VALUE_H
 
-#include <cstdint>
-#include <array>
-
 #include "structures.hpp"
 
 namespace C509

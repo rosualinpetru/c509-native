@@ -10,23 +10,30 @@ bool CBORCodec<AlgorithmIdentifier>::encode(zcbor_state_t *state, const Algorith
 
     switch (input.type)
     {
-
     case AlgorithmIdentifier::Type::Int:
         res = zcbor_int32_put(state, input.intAlgorithmIdentifier);
         break;
 
     case AlgorithmIdentifier::Type::OID:
-        res = CBORCodec<OID>::encode(state, input.oidAlgorithmIdentifier.algorithmIdentifier);
-
-        if (res && input.oidAlgorithmIdentifier.parameters.has_value)
+        if (input.oidAlgorithmIdentifier.parameters.has_value)
         {
-            res = zcbor_bstr_encode_ptr(
-                state,
-                reinterpret_cast<const char *>(input.oidAlgorithmIdentifier.parameters.value.elements),
-                input.oidAlgorithmIdentifier.parameters.value.len);
+            res = zcbor_list_start_encode(state, 2) &&
+                  CBORCodec<OID>::encode_unwrapped(state, input.oidAlgorithmIdentifier.algorithmIdentifier) &&
+                  zcbor_bstr_encode_ptr(
+                      state,
+                      reinterpret_cast<const char *>(input.oidAlgorithmIdentifier.parameters.value.elements),
+                      input.oidAlgorithmIdentifier.parameters.value.len) &&
+                  zcbor_list_end_encode(state, 2);
+        }
+        else
+        {
+            res = CBORCodec<OID>::encode_unwrapped(state, input.oidAlgorithmIdentifier.algorithmIdentifier);
         }
 
         break;
+    default:
+        fail("Unsupported AlgorithmIdentifier type", C509_ERR_ALGID_ENC_UNSUPPORTED_TYPE);
+        return false;
     }
 
     log_result(state, res, __PRETTY_FUNCTION__);
@@ -39,26 +46,27 @@ bool CBORCodec<AlgorithmIdentifier>::decode(zcbor_state_t *state, AlgorithmIdent
 
     bool res;
 
-    // Try decoding as an integer
     int32_t int_value;
 
-    state->elem_count = 1;
     if ((res = zcbor_int32_decode(state, &int_value)))
     {
-        output.type = AlgorithmIdentifier::Type::Int;
         output.intAlgorithmIdentifier = int_value;
+        output.type = AlgorithmIdentifier::Type::Int;
     }
-    // Try decoding as an OID
     else
     {
-        if ((res = CBORCodec<OID>::decode(state, output.oidAlgorithmIdentifier.algorithmIdentifier)))
+        if ((res = CBORCodec<OID>::decode_unwrapped(state, output.oidAlgorithmIdentifier.algorithmIdentifier)))
         {
+            output.oidAlgorithmIdentifier.parameters.has_value = false;
             output.type = C509::AlgorithmIdentifier::Type::OID;
+        }
+        else
+        {
+            res = zcbor_list_start_decode(state) && CBORCodec<OID>::decode_unwrapped(state, output.oidAlgorithmIdentifier.algorithmIdentifier);
 
             zcbor_string str;
 
-            state->elem_count = 1;
-            if (zcbor_bstr_decode(state, &str))
+            if ((res = res && zcbor_bstr_decode(state, &str)))
             {
                 if (str.len > MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES)
                     fail("AlgorithmIdentifier parameters exceeded max length", C509_ERR_ALGID_DEC_EXCEEDED_LENGTH);
@@ -66,13 +74,13 @@ bool CBORCodec<AlgorithmIdentifier>::decode(zcbor_state_t *state, AlgorithmIdent
                 if (!output.oidAlgorithmIdentifier.parameters.value.copy_from(str.value, str.len))
                     fail("Could not copy parsed AlgorithmIdentifier parameters", C509_ERR_ALGID_DEC_BSTR_FAILED);
 
+                res = res && zcbor_list_end_decode(state);
+
                 output.oidAlgorithmIdentifier.parameters.has_value = true;
+                output.type = C509::AlgorithmIdentifier::Type::OID;
             }
             else
-            {
-                output.oidAlgorithmIdentifier.parameters.has_value = false;
-                state->elem_count = 0;
-            }
+                fail("Invalid CBOR encoding for AlgorithmIdentifier", C509_ERR_ALGID_DEC_INVALID_ENCODING);
         }
     }
 

@@ -1,10 +1,8 @@
 #ifndef __C509_ALGORITHM_IDENTIFIER_H
 #define __C509_ALGORITHM_IDENTIFIER_H
 
-#include <cstddef>
-#include <cstdint>
-
 #include "structures.hpp"
+
 #include "oid.hpp"
 
 // WARNING
@@ -22,7 +20,7 @@ namespace C509
 
         union
         {
-            int16_t intAlgorithmIdentifier;
+            int16_t intAlgorithmIdentifier; // WARNING: could be optimised to uint8_t
             struct
             {
                 OID algorithmIdentifier;

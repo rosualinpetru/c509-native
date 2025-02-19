@@ -4,7 +4,7 @@
 
 using namespace C509;
 
-bool CBORCodec<OID>::encode(zcbor_state_t *state, const OID &input)
+bool CBORCodec<OID>::encode_unwrapped(zcbor_state_t *state, const OID &input)
 {
     zcbor_log("%s\r\n", __PRETTY_FUNCTION__);
 
@@ -44,14 +44,13 @@ bool CBORCodec<OID>::encode(zcbor_state_t *state, const OID &input)
     return res;
 }
 
-bool CBORCodec<OID>::decode(zcbor_state_t *state, OID &output)
+bool CBORCodec<OID>::decode_unwrapped(zcbor_state_t *state, OID &output)
 {
     zcbor_log("%s\r\n", __PRETTY_FUNCTION__);
 
     zcbor_string str;
     bool res;
 
-    state->elem_count = 1;
     if (!(res = zcbor_bstr_decode(state, &str)))
         fail("OID byte string decoding failed", C509_ERR_OID_DEC_BSTR_FAILED);
 

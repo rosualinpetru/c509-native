@@ -10,5 +10,6 @@
 #include "pk.hpp"
 #include "sig.hpp"
 #include "tbscert.hpp"
+#include "time.hpp"
 
 #endif // __C509_C509_TYPES

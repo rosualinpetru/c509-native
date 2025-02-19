@@ -1,14 +1,13 @@
 #ifndef __C509_TBSCERTIFICATE_H
 #define __C509_TBSCERTIFICATE_H
 
-#include <cstddef>
-#include <cstdint>
+#include "structures.hpp"
 
 #include "csn.hpp"
 #include "algid.hpp"
 #include "name.hpp"
+#include "time.hpp"
 #include "pk.hpp"
-#include "structures.hpp"
 
 namespace C509
 {
@@ -18,8 +17,8 @@ namespace C509
         CertificateSerialNumber certificateSerialNumber;
         AlgorithmIdentifier issuerSignatureAlgorithm;
         optional<Name> issuer;
-        uint32_t validityNotBefore;
-        optional<uint32_t> validityNotAfter;
+        Time validityNotBefore;
+        optional<Time> validityNotAfter;
         Name subject;
         AlgorithmIdentifier subjectPublicKeyAlgorithm;
         SubjectPublicKey subjectPublicKey;

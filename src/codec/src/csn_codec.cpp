@@ -24,7 +24,6 @@ bool CBORCodec<CertificateSerialNumber>::decode(zcbor_state_t *state, Certificat
 
     bool res;
 
-    state->elem_count = 1;
     if (!(res = zcbor_bstr_decode(state, &str)))
         fail("Certificate serial number byte string decoding failed.", C509_ERR_CSN_DEC_BSTR_FAILED);
 

@@ -4,6 +4,8 @@
 
 using namespace C509;
 
+static CodecTestHelper codecHelper = CodecTestHelper(2, (zcbor_decoder_t *)CBORCodec<OID>::encode_unwrapped, (zcbor_decoder_t *)CBORCodec<OID>::decode_unwrapped);
+
 TEST_CASE("OID Encoding")
 {
     // Input
@@ -17,15 +19,20 @@ TEST_CASE("OID Encoding")
     size_t out_size;
 
     // Encoding
-    int res = CodecTestHelper<OID, 2>::encode(out, max_size, &oid, &out_size);
+    int res = codecHelper.encode(out, max_size, &oid, &out_size);
 
     // Assertions
     REQUIRE(res == ZCBOR_SUCCESS);
 
-    uint8_t result[] = {0x49, 0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x01};
+    uint8_t expected_result[] = {0x49, 0x60, 0x86, 0x48, 0x01, 0x65, 0x03, 0x04, 0x02, 0x01};
+
+    REQUIRE(out_size == sizeof(expected_result));
 
     for (int i = 0; i < out_size; i++)
-        REQUIRE(out[i] == result[i]);
+        SECTION("Checking index " + std::to_string(i))
+        {
+            REQUIRE(HexByte(out[i]) == HexByte(expected_result[i]));
+        }
 }
 
 TEST_CASE("OID Decoding")
@@ -38,7 +45,7 @@ TEST_CASE("OID Decoding")
     OID oid;
 
     // Decoding
-    int res = CodecTestHelper<OID, 2>::decode(encoded_oid, encoded_size, &oid, NULL);
+    int res = codecHelper.decode(encoded_oid, encoded_size, &oid, NULL);
 
     // Assertions
     REQUIRE(res == ZCBOR_SUCCESS);
@@ -48,9 +55,10 @@ TEST_CASE("OID Decoding")
     REQUIRE(oid.subids.len == sizeof(expected_subids) / sizeof(uint32_t));
 
     for (size_t i = 0; i < oid.subids.len; i++)
-    {
-        REQUIRE(oid.subids.elements[i] == expected_subids[i]);
-    }
+        SECTION("Checking index " + std::to_string(i))
+        {
+            REQUIRE(oid.subids.elements[i] == expected_subids[i]);
+        }
 }
 
 TEST_CASE("OID Encoding - Invalid length")
@@ -66,7 +74,7 @@ TEST_CASE("OID Encoding - Invalid length")
     size_t out_size;
 
     // Encoding
-    int res = CodecTestHelper<OID, 2>::encode(out, max_size, &oid, &out_size);
+    int res = codecHelper.encode(out, max_size, &oid, &out_size);
 
     // Assertions
     REQUIRE(res == C509_ERR_OID_ENC_INVALID_LENGTH);
@@ -82,7 +90,7 @@ TEST_CASE("OID Decoding - Invalid Input")
     OID oid;
 
     // Decoding
-    int res = CodecTestHelper<OID, 2>::decode(encoded_oid, encoded_size, &oid, NULL);
+    int res = codecHelper.decode(encoded_oid, encoded_size, &oid, NULL);
 
     // Assertions
     REQUIRE(res == C509_ERR_OID_DEC_INVALID_LENGTH);
@@ -98,7 +106,7 @@ TEST_CASE("OID Decoding - Malformed OID")
     OID oid;
 
     // Decoding
-    int res = CodecTestHelper<OID, 2>::decode(encoded_oid, encoded_size, &oid, NULL);
+    int res = codecHelper.decode(encoded_oid, encoded_size, &oid, NULL);
 
     // Assertions
     REQUIRE(res == C509_ERR_OID_DEC_MALFORMED);

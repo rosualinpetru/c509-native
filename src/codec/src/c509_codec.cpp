@@ -2,7 +2,7 @@
 
 namespace C509
 {
-    int encode(uint8_t *payload, size_t payload_len, const Certificate *input, size_t *payload_len_out)
+    int encode(uint8_t *payload, size_t payload_len, const C509Certificate *input, size_t *payload_len_out)
     {
         zcbor_state_t states[13];
 
@@ -12,12 +12,12 @@ namespace C509
             (void *)input,
             payload_len_out,
             states,
-            (zcbor_decoder_t *)CBORCodec<Certificate>::encode,
+            (zcbor_decoder_t *)CBORCodec<C509Certificate>::encode_unwrapped,
             sizeof(states) / sizeof(zcbor_state_t),
             1);
     }
 
-    int decode(const uint8_t *payload, size_t payload_len, Certificate *result, size_t *payload_len_out)
+    int decode(const uint8_t *payload, size_t payload_len, C509Certificate *result, size_t *payload_len_out)
     {
         zcbor_state_t states[13];
 
@@ -27,8 +27,8 @@ namespace C509
             (void *)result,
             payload_len_out,
             states,
-            (zcbor_decoder_t *)CBORCodec<Certificate>::decode,
+            (zcbor_decoder_t *)CBORCodec<C509Certificate>::decode_unwrapped,
             sizeof(states) / sizeof(zcbor_state_t),
-            2);
+            1);
     }
 }

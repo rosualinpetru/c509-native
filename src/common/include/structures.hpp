@@ -1,8 +1,6 @@
 #ifndef __C509_UTIL_H
 #define __C509_UTIL_H
 
-#include <cstddef>
-#include <cstdint>
 #include <cstring>
 
 template <typename T, size_t N>

@@ -21,7 +21,7 @@ bool CBORCodec<Attribute>::encode(zcbor_state_t *state, const Attribute &input)
         break;
 
     case Attribute::Type::OID:
-        if ((res = CBORCodec<OID>::encode(state, input.oidAttribute.attributeType)))
+        if ((res = CBORCodec<OID>::encode_unwrapped(state, input.oidAttribute.attributeType)))
         {
             res = zcbor_bstr_encode_ptr(
                 state,
@@ -29,6 +29,9 @@ bool CBORCodec<Attribute>::encode(zcbor_state_t *state, const Attribute &input)
                 input.oidAttribute.attributeValue.len);
         }
         break;
+    default:
+        fail("Unsupported AlgorithmIdentifier type", C509_ERR_ATTR_ENC_UNSUPPORTED_TYPE);
+        return false;
     }
 
     log_result(state, res, __PRETTY_FUNCTION__);
@@ -43,12 +46,12 @@ bool CBORCodec<Attribute>::decode(zcbor_state_t *state, Attribute &output)
     int32_t int_value;
     zcbor_string str;
 
-    state->elem_count = 2;
     if ((res = zcbor_int32_decode(state, &int_value)))
     {
         output.type = Attribute::Type::Int;
         output.intAttribute.attributeType = int_value;
 
+        state->elem_count++;
         if ((res = zcbor_tstr_decode(state, &str)))
         {
             if (str.len > MAX_ATTRIBUTE_VALUE_TSTR_BYTES)
@@ -60,11 +63,11 @@ bool CBORCodec<Attribute>::decode(zcbor_state_t *state, Attribute &output)
     }
     else
     {
-        state->elem_count = 2;
-        if ((res = CBORCodec<OID>::decode(state, output.oidAttribute.attributeType)))
+        if ((res = CBORCodec<OID>::decode_unwrapped(state, output.oidAttribute.attributeType)))
         {
             output.type = Attribute::Type::OID;
 
+            state->elem_count++;
             if ((res = zcbor_bstr_decode(state, &str)))
             {
                 if (str.len > MAX_ATTRIBUTE_VALUE_BSTR_BYTES)
@@ -74,6 +77,8 @@ bool CBORCodec<Attribute>::decode(zcbor_state_t *state, Attribute &output)
                     fail("Could not copy parsed Attribute value", C509_ERR_ATTR_DEC_BSTR_FAILED);
             }
         }
+        else
+            fail("Invalid CBOR encoding for Attribute", C509_ERR_ATTR_DEC_INVALID_ENCODING);
     }
 
     log_result(state, res, __PRETTY_FUNCTION__);

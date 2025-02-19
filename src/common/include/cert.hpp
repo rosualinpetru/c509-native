@@ -1,16 +1,16 @@
-#ifndef __C509_CERTIFICATE_H
-#define __C509_CERTIFICATE_H
+#ifndef __C509_C509CERTIFICATE_H
+#define __C509_C509CERTIFICATE_H
 
 #include "tbscert.hpp"
 #include "sig.hpp"
 
 namespace C509
 {
-    struct Certificate
+    struct C509Certificate
     {
         TBSCertificate tbsCertificate;
         IssuerSignatureValue issuerSignatureValue;
     };
 }
 
-#endif // __C509_CERTIFICATE_H
+#endif // __C509_C509CERTIFICATE_H

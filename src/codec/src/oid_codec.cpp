@@ -6,10 +6,8 @@ using namespace C509;
 
 bool CBORCodec<OID>::encode_unwrapped(zcbor_state_t *state, const OID &input)
 {
-    zcbor_log("%s\r\n", __PRETTY_FUNCTION__);
-
     if (input.subids.len < 2 || input.subids.len > MAX_OID_SUBIDS)
-        fail("OID must have at least two sub-identifiers and at max 128", C509_ERR_OID_ENC_INVALID_LENGTH);
+        ZCBOR_ERR(C509_ERR_OID_ENC_INVALID_LENGTH);
 
     uint8_t oid_bytes[MAX_ENCODED_OID_LEN];
     size_t oid_len = 0;
@@ -38,24 +36,20 @@ bool CBORCodec<OID>::encode_unwrapped(zcbor_state_t *state, const OID &input)
             oid_bytes[oid_len++] = base128[base128_len - 1 - j];
     }
 
-    bool res = zcbor_bstr_encode_ptr(state, reinterpret_cast<const char *>(oid_bytes), oid_len);
+    if (!zcbor_bstr_encode_ptr(state, reinterpret_cast<const char *>(oid_bytes), oid_len))
+        ZCBOR_ERR(C509_ERR_OID_ENC_ZCBOR);
 
-    log_result(state, res, __PRETTY_FUNCTION__);
-    return res;
+    return true;
 }
 
 bool CBORCodec<OID>::decode_unwrapped(zcbor_state_t *state, OID &output)
 {
-    zcbor_log("%s\r\n", __PRETTY_FUNCTION__);
-
     zcbor_string str;
-    bool res;
-
-    if (!(res = zcbor_bstr_decode(state, &str)))
-        fail("OID byte string decoding failed", C509_ERR_OID_DEC_BSTR_FAILED);
+    if (!zcbor_bstr_decode(state, &str))
+        ZCBOR_ERR(C509_ERR_OID_DEC_ZCBOR);
 
     if (str.len < 1 || str.len > MAX_ENCODED_OID_LEN)
-        fail("Invalid OID encoding length", C509_ERR_OID_DEC_INVALID_LENGTH);
+        ZCBOR_ERR(C509_ERR_OID_DEC_INVALID_LENGTH);
 
     uint8_t first_byte = str.value[0];
     output.subids.elements[0] = first_byte / 40;
@@ -71,7 +65,7 @@ bool CBORCodec<OID>::decode_unwrapped(zcbor_state_t *state, OID &output)
         do
         {
             if (index >= str.len)
-                fail("Malformed OID: unexpected end of data", C509_ERR_OID_DEC_MALFORMED);
+                ZCBOR_ERR(C509_ERR_OID_DEC_MALFORMED);
 
             byte = str.value[index++];
             value = (value << 7) | (byte & 0x7F);
@@ -80,6 +74,5 @@ bool CBORCodec<OID>::decode_unwrapped(zcbor_state_t *state, OID &output)
         output.subids.elements[output.subids.len++] = value;
     }
 
-    log_result(state, res, __PRETTY_FUNCTION__);
-    return res;
+    return true;
 }

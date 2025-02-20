@@ -32,8 +32,8 @@ namespace Catch
 class CodecTestHelper
 {
 public:
-    CodecTestHelper(size_t state_count, zcbor_decoder_t *encode_fn, zcbor_decoder_t *decode_fn)
-        : state(state_count), encode_fn(encode_fn), decode_fn(decode_fn) {}
+    CodecTestHelper(size_t state_count, size_t elem_count, zcbor_decoder_t *encode_fn, zcbor_decoder_t *decode_fn)
+        : state(state_count), elem_count(elem_count), encode_fn(encode_fn), decode_fn(decode_fn) {}
 
     int encode(uint8_t *payload, size_t payload_len, const void *input, size_t *payload_len_out)
     {
@@ -45,7 +45,7 @@ public:
             state.data(),
             encode_fn,
             state.size(),
-            1);
+            elem_count);
     }
 
     int decode(const uint8_t *payload, size_t payload_len, void *result, size_t *payload_len_out)
@@ -58,11 +58,12 @@ public:
             state.data(),
             decode_fn,
             state.size(),
-            1);
+            elem_count);
     }
 
 private:
     std::vector<zcbor_state_t> state;
+    size_t elem_count;
     zcbor_decoder_t *encode_fn;
     zcbor_decoder_t *decode_fn;
 };

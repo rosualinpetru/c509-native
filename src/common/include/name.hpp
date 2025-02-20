@@ -6,7 +6,7 @@
 #include "attr.hpp"
 
 // WARNING
-#define MAX_NAME_ATTRIBUTES 16
+#define MAX_NAME_ATTRIBUTES 64
 // WARNING
 #define MAX_NAME_TSTR_BYTES 512
 // WARNING

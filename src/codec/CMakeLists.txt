@@ -8,6 +8,7 @@ add_library(c509_codec STATIC
     src/algid_codec.cpp
     src/attr_codec.cpp
     src/time_codec.cpp
+    src/name_codec.cpp
 )
 
 target_include_directories(c509_codec

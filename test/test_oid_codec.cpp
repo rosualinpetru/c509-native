@@ -4,7 +4,7 @@
 
 using namespace C509;
 
-static CodecTestHelper codecHelper = CodecTestHelper(2, (zcbor_decoder_t *)CBORCodec<OID>::encode_unwrapped, (zcbor_decoder_t *)CBORCodec<OID>::decode_unwrapped);
+static CodecTestHelper codecHelper = CodecTestHelper(2, 1, (zcbor_decoder_t *)CBORCodec<OID>::encode_unwrapped, (zcbor_decoder_t *)CBORCodec<OID>::decode_unwrapped);
 
 TEST_CASE("OID Encoding")
 {

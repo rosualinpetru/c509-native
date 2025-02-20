@@ -4,7 +4,7 @@
 
 using namespace C509;
 
-static CodecTestHelper codecHelper = CodecTestHelper(3, (zcbor_decoder_t *)CBORCodec<AlgorithmIdentifier>::encode, (zcbor_decoder_t *)CBORCodec<AlgorithmIdentifier>::decode);
+static CodecTestHelper codecHelper = CodecTestHelper(3, 1, (zcbor_decoder_t *)CBORCodec<AlgorithmIdentifier>::encode, (zcbor_decoder_t *)CBORCodec<AlgorithmIdentifier>::decode);
 
 TEST_CASE("AlgorithmIdentifier Encoding - Int Type")
 {

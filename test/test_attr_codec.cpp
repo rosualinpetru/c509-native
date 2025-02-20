@@ -4,13 +4,13 @@
 
 using namespace C509;
 
-static CodecTestHelper codecHelper = CodecTestHelper(2, (zcbor_decoder_t *)CBORCodec<Attribute>::encode, (zcbor_decoder_t *)CBORCodec<Attribute>::decode);
+static CodecTestHelper codecHelper = CodecTestHelper(2, 2, (zcbor_decoder_t *)CBORCodec<Attribute>::encode, (zcbor_decoder_t *)CBORCodec<Attribute>::decode);
 
 TEST_CASE("Attribute Encoding - Int Type")
 {
     // Input
-    C509::Attribute attr;
-    attr.type = C509::Attribute::Type::Int;
+    Attribute attr;
+    attr.type = Attribute::Type::Int;
     attr.intAttribute.attributeType = 15;
     uint8_t attr_value[] = {0x12, 0x34, 0x56};
     attr.intAttribute.attributeValue.copy_from(attr_value, sizeof(attr_value));
@@ -39,8 +39,8 @@ TEST_CASE("Attribute Encoding - Int Type")
 TEST_CASE("Attribute Encoding - OID Type")
 {
     // Input
-    C509::Attribute attr;
-    attr.type = C509::Attribute::Type::OID;
+    Attribute attr;
+    attr.type = Attribute::Type::OID;
     uint32_t subids[] = {2, 16, 840, 1, 101, 3, 4, 2, 1};
     attr.oidAttribute.attributeType.subids.copy_from(subids, sizeof(subids) / sizeof(uint32_t));
     uint8_t attr_value[] = {0x56, 0x78, 0x99};
@@ -74,14 +74,14 @@ TEST_CASE("Attribute Decoding - Int Type")
     size_t encoded_size = sizeof(encoded_attr);
 
     // Output: Decoded Attribute structure
-    C509::Attribute attr;
+    Attribute attr;
 
     // Decoding
     int res = codecHelper.decode(encoded_attr, encoded_size, &attr, NULL);
 
     // Assertions
     REQUIRE(res == ZCBOR_SUCCESS);
-    REQUIRE(attr.type == C509::Attribute::Type::Int);
+    REQUIRE(attr.type == Attribute::Type::Int);
     REQUIRE(attr.intAttribute.attributeType == 15);
     REQUIRE(attr.intAttribute.attributeValue.len == 2);
     REQUIRE(HexByte(attr.intAttribute.attributeValue.elements[0]) == HexByte(0x12));
@@ -95,14 +95,14 @@ TEST_CASE("Attribute Decoding - OID Type")
     size_t encoded_size = sizeof(encoded_attr);
 
     // Output: Decoded Attribute structure
-    C509::Attribute attr;
+    Attribute attr;
 
     // Decoding
     int res = codecHelper.decode(encoded_attr, encoded_size, &attr, NULL);
 
     // Assertions
     REQUIRE(res == ZCBOR_SUCCESS);
-    REQUIRE(attr.type == C509::Attribute::Type::OID);
+    REQUIRE(attr.type == Attribute::Type::OID);
 
     uint32_t expected_subids[] = {2, 16, 840, 1, 101, 3, 4, 2, 1};
 

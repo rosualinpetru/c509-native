@@ -5,17 +5,7 @@ namespace C509
 {
     struct Time
     {
-        enum class Type
-        {
-            Int,
-            Float
-        } type;
-
-        union
-        {
-            uint32_t intTime;
-            double floatTime;
-        };
+        uint64_t epochSeconds;
     };
 }
 

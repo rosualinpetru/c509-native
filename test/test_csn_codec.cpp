@@ -4,7 +4,7 @@
 
 using namespace C509;
 
-static CodecTestHelper codecHelper = CodecTestHelper(2, (zcbor_decoder_t *)CBORCodec<CertificateSerialNumber>::encode, (zcbor_decoder_t *)CBORCodec<CertificateSerialNumber>::decode);
+static CodecTestHelper codecHelper = CodecTestHelper(2, 1, (zcbor_decoder_t *)CBORCodec<CertificateSerialNumber>::encode, (zcbor_decoder_t *)CBORCodec<CertificateSerialNumber>::decode);
 
 TEST_CASE("CertificateSerialNumber Encoding")
 {
@@ -79,5 +79,5 @@ TEST_CASE("CertificateSerialNumber Decoding Failure - Exceeds Limit")
     int res = codecHelper.decode(in, in_size, &csn, NULL);
 
     // Assertions
-    REQUIRE(res == C509_ERR_CSN_DEC_EXCEEDED_LENGTH);
+    REQUIRE(res == C509_ERR_CSN_DEC_INVALID_LENGTH);
 }

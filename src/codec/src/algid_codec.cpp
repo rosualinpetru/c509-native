@@ -8,7 +8,7 @@ bool CBORCodec<AlgorithmIdentifier>::encode(zcbor_state_t *state, const Algorith
     {
     case AlgorithmIdentifier::Type::Int:
         if (!zcbor_int32_put(state, input.intAlgorithmIdentifier))
-            ZCBOR_ERR(C509_ERR_ALGID_ENC_ZCBOR);
+            ZCBOR_ERR(C509_ERR_ALGID_ENC_INT);
 
         return true;
 
@@ -16,7 +16,7 @@ bool CBORCodec<AlgorithmIdentifier>::encode(zcbor_state_t *state, const Algorith
         if (input.oidAlgorithmIdentifier.parameters.has_value)
         {
             if (!zcbor_list_start_encode(state, 2))
-                ZCBOR_ERR(C509_ERR_ALGID_ENC_ZCBOR);
+                ZCBOR_ERR(C509_ERR_ALGID_ENC_LIST_START);
 
             if (!CBORCodec<OID>::encode_unwrapped(state, input.oidAlgorithmIdentifier.algorithmIdentifier))
                 ZCBOR_ERR(C509_ERR_ALGID_ENC_OID);
@@ -28,7 +28,7 @@ bool CBORCodec<AlgorithmIdentifier>::encode(zcbor_state_t *state, const Algorith
                 ZCBOR_ERR(C509_ERR_ALGID_ENC_PARAMS);
 
             if (!zcbor_list_end_encode(state, 2))
-                ZCBOR_ERR(C509_ERR_ALGID_ENC_ZCBOR);
+                ZCBOR_ERR(C509_ERR_ALGID_ENC_LIST_END);
         }
         else if (!CBORCodec<OID>::encode_unwrapped(state, input.oidAlgorithmIdentifier.algorithmIdentifier))
             ZCBOR_ERR(C509_ERR_ALGID_ENC_OID);
@@ -44,7 +44,6 @@ bool CBORCodec<AlgorithmIdentifier>::decode(zcbor_state_t *state, AlgorithmIdent
 {
 
     int32_t int_value;
-
     if (zcbor_int32_decode(state, &int_value))
     {
         output.intAlgorithmIdentifier = int_value;
@@ -60,7 +59,7 @@ bool CBORCodec<AlgorithmIdentifier>::decode(zcbor_state_t *state, AlgorithmIdent
     }
 
     if (!zcbor_list_start_decode(state))
-        ZCBOR_ERR(C509_ERR_ALGID_DEC_ZCBOR);
+        ZCBOR_ERR(C509_ERR_ALGID_DEC_LIST_START);
 
     if (!CBORCodec<OID>::decode_unwrapped(state, output.oidAlgorithmIdentifier.algorithmIdentifier))
         ZCBOR_ERR(C509_ERR_ALGID_DEC_OID);
@@ -76,7 +75,7 @@ bool CBORCodec<AlgorithmIdentifier>::decode(zcbor_state_t *state, AlgorithmIdent
         ZCBOR_ERR(C509_ERR_ALGID_DEC_BUFFER_ERROR);
 
     if (!zcbor_list_end_decode(state))
-        ZCBOR_ERR(C509_ERR_ALGID_DEC_ZCBOR);
+        ZCBOR_ERR(C509_ERR_ALGID_DEC_LIST_END);
 
     output.oidAlgorithmIdentifier.parameters.has_value = true;
     output.type = C509::AlgorithmIdentifier::Type::OID;

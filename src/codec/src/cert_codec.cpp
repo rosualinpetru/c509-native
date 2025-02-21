@@ -2,14 +2,14 @@
 
 using namespace C509;
 
-bool CBORCodec<C509Certificate>::encode_unwrapped(zcbor_state_t *state, const C509Certificate &input)
+bool CBORCodec<C509Certificate>::encode(zcbor_state_t *state, const C509Certificate &input)
 {
     // TODO
     return CBORCodec<TBSCertificate>::encode(state, input.tbsCertificate) &&
            CBORCodec<IssuerSignatureValue>::encode(state, input.issuerSignatureValue);
 }
 
-bool CBORCodec<C509Certificate>::decode_unwrapped(zcbor_state_t *state, C509Certificate &output)
+bool CBORCodec<C509Certificate>::decode(zcbor_state_t *state, C509Certificate &output)
 {
     // TODO
     return CBORCodec<TBSCertificate>::decode(state, output.tbsCertificate) &&

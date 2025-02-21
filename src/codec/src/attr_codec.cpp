@@ -8,13 +8,13 @@ bool CBORCodec<Attribute>::encode(zcbor_state_t *state, const Attribute &input)
     {
     case Attribute::Type::Int:
         if (!zcbor_int32_put(state, input.intAttribute.attributeType))
-            ZCBOR_ERR(C509_ERR_ATTR_ENC_ZCBOR);
+            ZCBOR_ERR(C509_ERR_ATTR_ENC_INT);
 
         if (!zcbor_tstr_encode_ptr(
                 state,
                 reinterpret_cast<const char *>(input.intAttribute.attributeValue.elements),
                 input.intAttribute.attributeValue.len))
-            ZCBOR_ERR(C509_ERR_ATTR_ENC_ZCBOR);
+            ZCBOR_ERR(C509_ERR_ATTR_ENC_TSTR);
 
         return true;
 
@@ -27,7 +27,7 @@ bool CBORCodec<Attribute>::encode(zcbor_state_t *state, const Attribute &input)
                 state,
                 reinterpret_cast<const char *>(input.oidAttribute.attributeValue.elements),
                 input.oidAttribute.attributeValue.len))
-            ZCBOR_ERR(C509_ERR_ATTR_ENC_ZCBOR);
+            ZCBOR_ERR(C509_ERR_ATTR_ENC_BSTR);
 
         return true;
 
@@ -47,7 +47,7 @@ bool CBORCodec<Attribute>::decode(zcbor_state_t *state, Attribute &output)
         output.intAttribute.attributeType = int_value;
 
         if (!zcbor_tstr_decode(state, &str))
-            ZCBOR_ERR(C509_ERR_ATTR_DEC_ZCBOR);
+            ZCBOR_ERR(C509_ERR_ATTR_DEC_TSTR);
 
         if (str.len > MAX_ATTRIBUTE_VALUE_TSTR_BYTES)
             ZCBOR_ERR(C509_ERR_ATTR_DEC_INVALID_LENGTH);
@@ -59,12 +59,12 @@ bool CBORCodec<Attribute>::decode(zcbor_state_t *state, Attribute &output)
     }
 
     if (!CBORCodec<OID>::decode_unwrapped(state, output.oidAttribute.attributeType))
-        ZCBOR_ERR(C509_ERR_ATTR_DEC_ZCBOR);
+        ZCBOR_ERR(C509_ERR_ATTR_DEC_OID);
 
     output.type = Attribute::Type::OID;
 
     if (!zcbor_bstr_decode(state, &str))
-        ZCBOR_ERR(C509_ERR_ATTR_DEC_ZCBOR);
+        ZCBOR_ERR(C509_ERR_ATTR_DEC_BSTR);
 
     if (str.len > MAX_ATTRIBUTE_VALUE_TSTR_BYTES)
         ZCBOR_ERR(C509_ERR_ATTR_DEC_INVALID_LENGTH);

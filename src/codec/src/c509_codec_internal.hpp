@@ -29,10 +29,7 @@ namespace C509
     template <typename T>
     struct CBORCodec;
 
-    DECLARE_C509_CBOR_CODEC_UNWRAPPED(C509Certificate)
-    DECLARE_C509_CBOR_CODEC_UNWRAPPED(OID)
-    DECLARE_C509_CBOR_CODEC_UNWRAPPED(Time)
-
+    DECLARE_C509_CBOR_CODEC(C509Certificate)
     DECLARE_C509_CBOR_CODEC(TBSCertificate)
     DECLARE_C509_CBOR_CODEC(CertificateSerialNumber)
     DECLARE_C509_CBOR_CODEC(AlgorithmIdentifier)
@@ -40,6 +37,11 @@ namespace C509
     DECLARE_C509_CBOR_CODEC(Attribute)
     DECLARE_C509_CBOR_CODEC(SubjectPublicKey)
     DECLARE_C509_CBOR_CODEC(IssuerSignatureValue)
+    DECLARE_C509_CBOR_CODEC(Extensions)
+    DECLARE_C509_CBOR_CODEC(Extension)
+
+    DECLARE_C509_CBOR_CODEC_UNWRAPPED(OID)
+    DECLARE_C509_CBOR_CODEC_UNWRAPPED(Time)
 }
 
 #endif // __C509_CBOR_CODEC_H

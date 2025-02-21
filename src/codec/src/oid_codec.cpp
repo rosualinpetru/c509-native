@@ -37,7 +37,7 @@ bool CBORCodec<OID>::encode_unwrapped(zcbor_state_t *state, const OID &input)
     }
 
     if (!zcbor_bstr_encode_ptr(state, reinterpret_cast<const char *>(oid_bytes), oid_len))
-        ZCBOR_ERR(C509_ERR_OID_ENC_ZCBOR);
+        ZCBOR_ERR(C509_ERR_OID_ENC_BSTR);
 
     return true;
 }
@@ -46,7 +46,7 @@ bool CBORCodec<OID>::decode_unwrapped(zcbor_state_t *state, OID &output)
 {
     zcbor_string str;
     if (!zcbor_bstr_decode(state, &str))
-        ZCBOR_ERR(C509_ERR_OID_DEC_ZCBOR);
+        ZCBOR_ERR(C509_ERR_OID_DEC_BSTR);
 
     if (str.len < 1 || str.len > MAX_ENCODED_OID_LEN)
         ZCBOR_ERR(C509_ERR_OID_DEC_INVALID_LENGTH);

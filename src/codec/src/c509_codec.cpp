@@ -14,7 +14,7 @@ namespace C509
             (void *)input,
             payload_len_out,
             states,
-            (zcbor_decoder_t *)CBORCodec<C509Certificate>::encode_unwrapped,
+            (zcbor_decoder_t *)CBORCodec<C509Certificate>::encode,
             sizeof(states) / sizeof(zcbor_state_t),
             1);
     }
@@ -29,7 +29,7 @@ namespace C509
             (void *)result,
             payload_len_out,
             states,
-            (zcbor_decoder_t *)CBORCodec<C509Certificate>::decode_unwrapped,
+            (zcbor_decoder_t *)CBORCodec<C509Certificate>::decode,
             sizeof(states) / sizeof(zcbor_state_t),
             1);
     }

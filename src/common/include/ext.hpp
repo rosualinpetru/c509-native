@@ -1,78 +1,46 @@
-// #ifndef __C509_EXTENSIONS_H
-// #define __C509_EXTENSIONS_H
+#ifndef __C509_EXTENSIONS_H
+#define __C509_EXTENSIONS_H
 
-// #include <optional>
+#include "structures.hpp"
 
-// #include "cbor.hpp"
-// #include "definitions.hpp"
-// #include "util.hpp"
+// WARNING
+#define MAX_EXTENSION_BYTES 256
 
-// constexpr size_t MAX_PARMETER_BYTES = 4096; // WARNING
+// WARNING
+#define MAX_EXTENSIONS_LIST_SIZE 64
 
-// struct Extension
-// {
-//     enum class Type
-//     {
-//         Int,
-//         OID
-//     } const type;
+namespace C509
+{
+    struct Extension
+    {
+        enum class Type
+        {
+            // Int, // Not yet supported as requires implementation of optimised Extension CBOR encoding. Confer to the registry https://www.ietf.org/archive/id/draft-ietf-cose-cbor-encoded-cert-12.html#section-9.4
+            OID
+        } type;
 
-//     union
-//     {
-//         const uint8_t intId;
-//         // TODO: Need to implement all extensions before being able to integrate them
-//         struct OIDId
-//         {
-//             const OID oidId;
-//             const std::optional<array<uint8_t, MAX_PARMETER_BYTES>> params;
-//         } const oidWithParams;
-//     };
+        struct
+        {
+            OID extensionID;
+            bool critical;
+            bounded_array<uint8_t, MAX_EXTENSION_BYTES> extensionValue;
+        } oidExtension;
+    };
 
-//     struct Extensions
-//     {
-//         enum class Type
-//         {
-//             Int,
-//             OID
-//         } const type;
+    struct Extensions
+    {
+        enum class Type
+        {
+            MixedKeyUsage,
+            List
+        } type;
 
-//         union
-//         {
-//             const uint8_t intId;
-//             struct OIDId
-//             {
-//                 const OID oidId;
-//                 const std::optional<array<uint8_t, MAX_PARMETER_BYTES>> params;
-//             } const oidWithParams;
-//         };
-//     };
+        union
+        {
+            int64_t mixedKeyUsage;
+            bounded_array<Extension, MAX_EXTENSIONS_LIST_SIZE> extensions;
+        };
+    };
+}
 
-//     DECLARE_CBOR_CODEC(Extensions)
-
-// #endif
-// __C509_EXTENSIONS_H
-
-// 	struct IntExtension
-// 	{
-// 		CBOR::Prelude::Int extensionID;
-// 		CBOR::Prelude::Any attributeValue;
-// 	};
-
-// 	struct OIDExtension
-// 	{
-// 		CBOR::Prelude::BStr extensionID; // unwrapped OID
-// 		CBOR::Prelude::Bool critical;
-// 		CBOR::Prelude::Bytes attributeValue;
-// 	};
-
-// 	struct Extension
-// 	{
-// 		std::variant<IntExtension, OIDExtension> choice;
-// 	};
-
-// 	struct Extensions
-// 	{
-// 		std::variant<std::vector<Extension>,
-// 					 CBOR::Prelude::Int>
-// 			choice;
-// 	};
+#endif // __C509_EXTENSIONS_H

@@ -8,6 +8,7 @@
 #include "name.hpp"
 #include "time.hpp"
 #include "pk.hpp"
+#include "ext.hpp"
 
 namespace C509
 {
@@ -22,7 +23,7 @@ namespace C509
         Name subject;
         AlgorithmIdentifier subjectPublicKeyAlgorithm;
         SubjectPublicKey subjectPublicKey;
-        // Extensions extensions;
+        Extensions extensions;
     };
 }
 

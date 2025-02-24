@@ -2,7 +2,6 @@ add_library(c509_codec STATIC
     src/c509_codec.cpp
     src/cert_codec.cpp
     src/csn_codec.cpp
-    src/sig_codec.cpp
     src/tbscert_codec.cpp
     src/oid_codec.cpp
     src/algid_codec.cpp
@@ -10,6 +9,8 @@ add_library(c509_codec STATIC
     src/time_codec.cpp
     src/name_codec.cpp
     src/ext_codec.cpp
+    src/sig/sig_codec.cpp
+    src/pk/pk_codec.cpp
 )
 
 target_include_directories(c509_codec

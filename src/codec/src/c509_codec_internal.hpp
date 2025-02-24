@@ -24,6 +24,14 @@
 #define DECLARE_C509_CBOR_CODEC(Type) DECLARE_C509_CBOR_CODEC_SPECIALIZATION(Type, CBOR_CODEC_MODE_NORMAL)
 #define DECLARE_C509_CBOR_CODEC_UNWRAPPED(Type) DECLARE_C509_CBOR_CODEC_SPECIALIZATION(Type, CBOR_CODEC_MODE_UNWRAPPED)
 
+#define DECLARE_C509_CBOR_CODEC_SPECIALIZATION_ALGID_DEPENDANT(Type)                                           \
+    template <>                                                                                                \
+    struct CBORCodec<Type>                                                                                     \
+    {                                                                                                          \
+        static bool encode(zcbor_state_t * state, const Type &input, AlgorithmIdentifier algId); \
+        static bool decode(zcbor_state_t * state, Type &output, AlgorithmIdentifier algId);      \
+    };
+
 namespace C509
 {
     template <typename T>
@@ -35,13 +43,15 @@ namespace C509
     DECLARE_C509_CBOR_CODEC(AlgorithmIdentifier)
     DECLARE_C509_CBOR_CODEC(Name)
     DECLARE_C509_CBOR_CODEC(Attribute)
-    DECLARE_C509_CBOR_CODEC(SubjectPublicKey)
-    DECLARE_C509_CBOR_CODEC(IssuerSignatureValue)
+
     DECLARE_C509_CBOR_CODEC(Extensions)
     DECLARE_C509_CBOR_CODEC(Extension)
 
     DECLARE_C509_CBOR_CODEC_UNWRAPPED(OID)
     DECLARE_C509_CBOR_CODEC_UNWRAPPED(Time)
+
+    DECLARE_C509_CBOR_CODEC_SPECIALIZATION_ALGID_DEPENDANT(SubjectPublicKey)
+    DECLARE_C509_CBOR_CODEC_SPECIALIZATION_ALGID_DEPENDANT(IssuerSignatureValue)
 }
 
 #endif // __C509_CBOR_CODEC_H

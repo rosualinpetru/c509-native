@@ -1,7 +1,4 @@
-add_library(zcbor)
-
-target_sources(zcbor
-    PRIVATE
+add_library(zcbor STATIC
     ${CMAKE_CURRENT_LIST_DIR}/zcbor/src/zcbor_decode.c
     ${CMAKE_CURRENT_LIST_DIR}/zcbor/src/zcbor_encode.c
     ${CMAKE_CURRENT_LIST_DIR}/zcbor/src/zcbor_common.c
@@ -10,5 +7,6 @@ target_sources(zcbor
 
 target_include_directories(zcbor
     PUBLIC
-    ${CMAKE_CURRENT_LIST_DIR}/zcbor/include
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/zcbor/include>
+    $<INSTALL_INTERFACE:include>
 )

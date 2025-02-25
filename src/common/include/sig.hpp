@@ -7,7 +7,7 @@ namespace C509
 {
     // WARNING
     // temporary until actually implementing the parsing of pq signatures
-    struct IssuerSignatureValue
+    struct SignatureValue
     {
         const bounded_array<uint8_t, 32> bytes;
     };

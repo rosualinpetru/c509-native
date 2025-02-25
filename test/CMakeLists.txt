@@ -7,9 +7,10 @@ add_executable(UnitTestsCodec
     test_attr_codec.cpp
     test_time_codec.cpp
     test_name_codec.cpp
-    test_ext_codec.cpp)
+    test_ext_codec.cpp
+    test_crypto.cpp)
 
-target_link_libraries(UnitTestsCodec PUBLIC c509_codec)
+target_link_libraries(UnitTestsCodec PUBLIC c509_codec OpenSSL::Crypto oqsprovider)
 target_link_libraries(UnitTestsCodec PRIVATE Catch2::Catch2WithMain)
 
 target_include_directories(UnitTestsCodec
@@ -18,4 +19,4 @@ target_include_directories(UnitTestsCodec
     ${CMAKE_CURRENT_SOURCE_DIR}/../src/codec/src
 )
 
-catch_discover_tests("UnitTestsCodec")
+catch_discover_tests(UnitTestsCodec)

@@ -2,12 +2,12 @@
 
 using namespace C509;
 
-bool CBORCodec<IssuerSignatureValue>::encode(zcbor_state_t *state, const IssuerSignatureValue &input, AlgorithmIdentifier algId)
+bool CBORCodec<SignatureValue>::encode(zcbor_state_t *state, const SignatureValue &input, AlgorithmIdentifier algId)
 {
     return true;
 }
 
-bool CBORCodec<IssuerSignatureValue>::decode(zcbor_state_t *state, IssuerSignatureValue &output, AlgorithmIdentifier algId)
+bool CBORCodec<SignatureValue>::decode(zcbor_state_t *state, SignatureValue &output, AlgorithmIdentifier algId)
 {
     return true;
 }

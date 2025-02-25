@@ -4,7 +4,7 @@ using namespace C509;
 
 bool CBORCodec<TBSCertificate>::encode(zcbor_state_t *state, const TBSCertificate &input)
 {
-    if (input.c509CertificateType != 2 && input.c509CertificateType != 3 || !zcbor_uint32_put(state, input.c509CertificateType))
+    if (!zcbor_uint32_put(state, 2))
         ZCBOR_ERR(C509_ERR_TBSCERT_ENC_CERT_TYPE);
 
     if (!CBORCodec<CertificateSerialNumber>::encode(state, input.certificateSerialNumber))
@@ -49,10 +49,8 @@ bool CBORCodec<TBSCertificate>::encode(zcbor_state_t *state, const TBSCertificat
 
 bool CBORCodec<TBSCertificate>::decode(zcbor_state_t *state, TBSCertificate &output)
 {
-    uint32_t temp;
-    if (!zcbor_uint32_decode(state, &temp))
+    if (!zcbor_uint32_expect(state, 2))
         ZCBOR_ERR(C509_ERR_TBSCERT_DEC_CERT_TYPE);
-    output.c509CertificateType = temp;
 
     if (!CBORCodec<CertificateSerialNumber>::decode(state, output.certificateSerialNumber))
         ZCBOR_ERR(C509_ERR_TBSCERT_DEC_SERIAL_NUMBER);

@@ -14,7 +14,6 @@ namespace C509
 {
     struct TBSCertificate
     {
-        uint8_t c509CertificateType;
         CertificateSerialNumber certificateSerialNumber;
         AlgorithmIdentifier issuerSignatureAlgorithm;
         optional<Name> issuer;

@@ -8,6 +8,7 @@
 #include "c509_codec.hpp"
 #include "c509_codec_errors.hpp"
 
+
 #define CBOR_CODEC_MODE_NORMAL /* Empty */
 #define CBOR_CODEC_MODE_UNWRAPPED _unwrapped
 
@@ -51,7 +52,7 @@ namespace C509
     DECLARE_C509_CBOR_CODEC_UNWRAPPED(Time)
 
     DECLARE_C509_CBOR_CODEC_SPECIALIZATION_ALGID_DEPENDANT(SubjectPublicKey)
-    DECLARE_C509_CBOR_CODEC_SPECIALIZATION_ALGID_DEPENDANT(IssuerSignatureValue)
+    DECLARE_C509_CBOR_CODEC_SPECIALIZATION_ALGID_DEPENDANT(SignatureValue)
 }
 
 #endif // __C509_CBOR_CODEC_H

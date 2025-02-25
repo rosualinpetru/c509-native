@@ -29,10 +29,12 @@ include(Docs)
 add_compile_definitions(ZCBOR_CANONICAL=1)
 add_git_submodule(${EXTERNAL_DIR}/zcbor)
 
+# openssl
+find_package(OpenSSL 3.0 REQUIRED)
+
 # liboqs 
 set(OQS_BUILD_ONLY_LIB ON)
 set(OQS_MINIMAL_BUILD "SIG_ml_dsa_44;SIG_ml_dsa_65;SIG_dilithium_2")
-set(OQS_USE_OPENSSL OFF)
 # set(OQS_EMBEDDED_BUILD ON)
 FetchContent_Declare(
     liboqs
@@ -40,6 +42,19 @@ FetchContent_Declare(
     GIT_TAG 0.12.0
     GIT_SHALLOW TRUE)
 FetchContent_MakeAvailable(liboqs)
+
+# oqs-provider
+cmake_policy(SET CMP0077 NEW)
+
+set(OQS_PROVIDER_BUILD_STATIC ON CACHE BOOL "Build OQS provider as a static library")
+FetchContent_Declare(
+    oqsprovider
+    GIT_REPOSITORY https://github.com/open-quantum-safe/oqs-provider
+    GIT_TAG 0.8.0
+    GIT_SHALLOW TRUE)
+FetchContent_MakeAvailable(oqsprovider)
+
+### Tasks
 
 if(ENABLE_TESTING)
     FetchContent_Declare(
@@ -50,8 +65,6 @@ if(ENABLE_TESTING)
     FetchContent_MakeAvailable(Catch2)
     list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/extras)
 endif()
-
-### Tasks
 
 # Code generation
 if(ENABLE_GEN_ZCBOR_CODEC)

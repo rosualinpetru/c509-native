@@ -9,7 +9,7 @@ namespace C509
     struct C509Certificate
     {
         TBSCertificate tbsCertificate;
-        IssuerSignatureValue issuerSignatureValue;
+        SignatureValue signatureValue;
     };
 }
 

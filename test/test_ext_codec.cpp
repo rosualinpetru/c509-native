@@ -1,6 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
+
 #include "test_helper.cpp"
-#include "c509_codec_internal.hpp"
 
 using namespace C509;
 

@@ -70,67 +70,78 @@ OSSL_LIB_CTX *load_oqs_provider()
     return libctx;
 }
 
-void print_key_bytes(EVP_PKEY *key)
+void print_bytes(const char *label, const unsigned char *data, size_t len)
 {
-    size_t keylen = 0;
-    unsigned char *keydata = nullptr;
-
-    // Extract raw public key bytes
-    if (EVP_PKEY_get_octet_string_param(key, OSSL_PKEY_PARAM_PUB_KEY, nullptr, 0, &keylen))
-    {
-        keydata = new unsigned char[keylen];
-        if (EVP_PKEY_get_octet_string_param(key, OSSL_PKEY_PARAM_PUB_KEY, keydata, keylen, &keylen))
-        {
-            std::cout << "Public Key (" << keylen << " bytes): ";
-            for (size_t i = 0; i < keylen; i++)
-            {
-                printf("%02X", keydata[i]);
-            }
-            std::cout << std::endl;
-        }
-        delete[] keydata;
-    }
+    std::cout << label << " " << len << ": ";
+    for (size_t i = 0; i < len; i++)
+        printf("%02X", data[i]);
+    std::cout << std::endl;
 }
 
 TEST_CASE("Gen Composite Key")
 {
+    // Load OQS Provider
     OSSL_LIB_CTX *oqs_provider_ctx = load_oqs_provider();
     if (!oqs_provider_ctx)
     {
         std::cerr << "Failed to load OQS provider.\n";
-        return;
     }
 
+    // Create keygen context
     EVP_PKEY_CTX *pkey_ctx = EVP_PKEY_CTX_new_from_name(oqs_provider_ctx, "mldsa44_ed25519", OQSPROV_PROPQ);
     if (!pkey_ctx)
     {
         std::cerr << "Failed to create EVP_PKEY_CTX.\n";
-        return;
+        OSSL_LIB_CTX_free(oqs_provider_ctx);
     }
 
+    // Initialize keygen
     if (EVP_PKEY_keygen_init(pkey_ctx) <= 0)
     {
         std::cerr << "Failed to initialize key generation.\n";
         EVP_PKEY_CTX_free(pkey_ctx);
-        return;
+        OSSL_LIB_CTX_free(oqs_provider_ctx);
     }
 
+    // Generate keypair
     EVP_PKEY *key = nullptr;
     if (EVP_PKEY_generate(pkey_ctx, &key) <= 0)
     {
         std::cerr << "Failed to generate composite key.\n";
         EVP_PKEY_CTX_free(pkey_ctx);
-        return;
+        OSSL_LIB_CTX_free(oqs_provider_ctx);
+
     }
 
-    // Print Key in Hexadecimal
-    print_key_bytes(key);
+    // Extract raw private key
+    size_t priv_len = 0;
+    EVP_PKEY_get_raw_private_key(key, nullptr, &priv_len);
+    std::vector<unsigned char> priv_key(priv_len);
+    if (EVP_PKEY_get_raw_private_key(key, priv_key.data(), &priv_len) > 0)
+    {
+        print_bytes("Private Key (Raw)", priv_key.data(), priv_len);
+    }
+    else
+    {
+        std::cerr << "Failed to extract raw private key.\n";
+    }
 
-    const char *key_alg = EVP_PKEY_get0_type_name(key);
-    printf("Key Algorithm: %s\n", key_alg);
+    // Extract raw public key
+    size_t pub_len = 0;
+    EVP_PKEY_get_raw_public_key(key, nullptr, &pub_len);
+    std::vector<unsigned char> pub_key(pub_len);
+    if (EVP_PKEY_get_raw_public_key(key, pub_key.data(), &pub_len) > 0)
+    {
+        print_bytes("Public Key (Raw)", pub_key.data(), pub_len);
+    }
+    else
+    {
+        std::cerr << "Failed to extract raw public key.\n";
+    }
 
     // Cleanup
     EVP_PKEY_free(key);
     EVP_PKEY_CTX_free(pkey_ctx);
     OSSL_LIB_CTX_free(oqs_provider_ctx);
+
 }

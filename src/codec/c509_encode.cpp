@@ -1,3 +1,6 @@
+// IGNORE THIS
+// KEPT ONLY FOR INSPIRATION
+
 // #include <zcbor_encode.h>
 // #include <zcbor_print.h>
 

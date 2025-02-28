@@ -1,4 +1,4 @@
-#include "c509_codec_internal.hpp"
+#include "util/codec_internal.hpp"
 
 using namespace C509;
 

@@ -1,10 +1,26 @@
-#include "c509_codec_internal.hpp"
+#include "util/codec_internal.hpp"
 
 using namespace C509;
 
+bool CBORCodec<C509Certificate>::encode(zcbor_state_t *state, const C509Certificate &input)
+{
+    return zcbor_list_start_encode(state, 11) &&
+           CBORCodec<TBSCertificate>::encode(state, input.tbsCertificate) &&
+           CBORCodec<SignatureValue>::encode(state, input.signatureValue) &&
+           zcbor_list_end_encode(state, 11);
+}
+
+bool CBORCodec<C509Certificate>::decode(zcbor_state_t *state, C509Certificate &output)
+{
+    return zcbor_list_start_decode(state) &&
+           CBORCodec<TBSCertificate>::decode(state, output.tbsCertificate) &&
+           CBORCodec<SignatureValue>::decode(state, output.signatureValue) &&
+           zcbor_list_end_decode(state);
+}
+
 bool CBORCodec<TBSCertificate>::encode(zcbor_state_t *state, const TBSCertificate &input)
 {
-    if (!zcbor_uint32_put(state, 2))
+    if (input.c509CertificateType != 2 || !zcbor_uint32_put(state, 2))
         ZCBOR_ERR(C509_ERR_TBSCERT_ENC_CERT_TYPE);
 
     if (!CBORCodec<CertificateSerialNumber>::encode(state, input.certificateSerialNumber))
@@ -38,7 +54,7 @@ bool CBORCodec<TBSCertificate>::encode(zcbor_state_t *state, const TBSCertificat
     if (!CBORCodec<AlgorithmIdentifier>::encode(state, input.subjectPublicKeyAlgorithm))
         ZCBOR_ERR(C509_ERR_TBSCERT_ENC_SUBJ_PUBKEY_ALG);
 
-    if (!CBORCodec<SubjectPublicKey>::encode(state, input.subjectPublicKey, input.subjectPublicKeyAlgorithm))
+    if (!CBORCodec<SubjectPublicKey>::encode(state, input.subjectPublicKey))
         ZCBOR_ERR(C509_ERR_TBSCERT_ENC_SUBJ_PUBKEY);
 
     if (!CBORCodec<Extensions>::encode(state, input.extensions))
@@ -86,7 +102,7 @@ bool CBORCodec<TBSCertificate>::decode(zcbor_state_t *state, TBSCertificate &out
     if (!CBORCodec<AlgorithmIdentifier>::decode(state, output.subjectPublicKeyAlgorithm))
         ZCBOR_ERR(C509_ERR_TBSCERT_DEC_SUBJ_PUBKEY_ALG);
 
-    if (!CBORCodec<SubjectPublicKey>::decode(state, output.subjectPublicKey, output.subjectPublicKeyAlgorithm))
+    if (!CBORCodec<SubjectPublicKey>::decode(state, output.subjectPublicKey))
         ZCBOR_ERR(C509_ERR_TBSCERT_DEC_SUBJ_PUBKEY);
 
     if (!CBORCodec<Extensions>::decode(state, output.extensions))

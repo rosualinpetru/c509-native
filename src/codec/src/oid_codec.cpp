@@ -1,4 +1,4 @@
-#include "c509_codec_internal.hpp"
+#include "util/codec_internal.hpp"
 
 #define MAX_ENCODED_OID_LEN MAX_OID_SUBIDS * 5 // Worst case: each subid uses up to 5 bytes
 

@@ -1,6 +1,6 @@
 #include <cstddef>
 
-#include "c509_codec_internal.hpp"
+#include "util/codec_internal.hpp"
 
 #include <catch2/catch_tostring.hpp>
 #include <sstream>

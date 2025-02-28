@@ -1,6 +1,8 @@
 #ifndef __C509_OID
 #define __C509_OID
 
+#include <cstdint>
+
 #include "structures.hpp"
 
 // Defined in https://datatracker.ietf.org/doc/html/rfc2578#section-3.5

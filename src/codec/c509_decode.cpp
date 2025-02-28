@@ -1,3 +1,9 @@
+// IGNORE THIS
+// KEPT ONLY FOR INSPIRATION
+
+
+
+
 // #include <stdint.h>
 // #include <stdbool.h>
 // #include <stddef.h>

@@ -5,7 +5,7 @@
 
 #include "oid.hpp"
 
-// WARNING
+// TODO
 #define MAX_ALGORITHM_IDENTIFIER_PARMETER_BYTES 128
 
 namespace C509
@@ -20,7 +20,7 @@ namespace C509
 
         union
         {
-            int16_t intAlgorithmIdentifier; // WARNING: could be optimised to uint8_t
+            int16_t intAlgorithmIdentifier; // TODO: could be optimised to uint8_t
             struct
             {
                 OID algorithmIdentifier;

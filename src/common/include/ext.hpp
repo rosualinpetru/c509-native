@@ -1,12 +1,16 @@
 #ifndef __C509_EXTENSIONS_H
 #define __C509_EXTENSIONS_H
 
+#include <cstdint>
+
 #include "structures.hpp"
 
-// WARNING
+#include "oid.hpp"
+
+// TODO
 #define MAX_EXTENSION_BYTES 256
 
-// WARNING
+// TODO
 #define MAX_EXTENSIONS_LIST_SIZE 64
 
 namespace C509
@@ -15,7 +19,7 @@ namespace C509
     {
         enum class Type
         {
-            // Int, // Not yet supported as requires implementation of optimised Extension CBOR encoding. Confer to the registry https://www.ietf.org/archive/id/draft-ietf-cose-cbor-encoded-cert-12.html#section-9.4
+            // Int, // TODO: Not yet supported as requires implementation of optimised Extension CBOR encoding. Confer to the registry https://www.ietf.org/archive/id/draft-ietf-cose-cbor-encoded-cert-12.html#section-9.4
             OID
         } type;
 

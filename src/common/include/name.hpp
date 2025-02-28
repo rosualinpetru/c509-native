@@ -1,15 +1,17 @@
 #ifndef __C509_NAME_H
 #define __C509_NAME_H
 
+#include <cstdint>
+
 #include "structures.hpp"
 
 #include "attr.hpp"
 
-// WARNING
+// TODO
 #define MAX_NAME_ATTRIBUTES 64
-// WARNING
+// TODO
 #define MAX_NAME_TSTR_BYTES 512
-// WARNING
+// TODO
 #define MAX_NAME_BSTR_BYTES 512
 
 namespace C509

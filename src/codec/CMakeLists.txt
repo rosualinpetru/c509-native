@@ -1,5 +1,5 @@
 add_library(c509_codec STATIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/c509_codec.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main/c509_codec.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/csn_codec.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/oid_codec.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/algid_codec.cpp

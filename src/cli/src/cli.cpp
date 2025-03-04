@@ -8,7 +8,7 @@
 
 #define MAX_BUFFER_SIZE 16384
 
-void writeBinaryFile(const std::string &filename, const uint8_t *data, size_t size) {
+void writeBinaryFile(const std::string &filename, const uint8_t *data, const size_t size) {
     std::ofstream file(filename, std::ios::binary);
     if (!file) {
         std::cerr << "Error: Could not open file for writing: " << filename << "\n";
@@ -20,7 +20,7 @@ void writeBinaryFile(const std::string &filename, const uint8_t *data, size_t si
     std::cout << "\nHex dump (" << filename << "):\n";
     for (size_t i = 0; i < size; ++i) {
         std::cout << std::hex << std::setw(2) << std::setfill('0')
-                << static_cast<int>(data[i]) << " ";
+                  << static_cast<int>(data[i]) << " ";
         if ((i + 1) % 16 == 0) std::cout << '\n';
     }
     std::cout << std::dec << std::endl;
@@ -41,16 +41,25 @@ std::optional<std::string> getOptionalInput(const std::string &prompt) {
 }
 
 int main(const int argc, char *argv[]) {
-    if (argc < 3 || std::string(argv[1]) != "c509" || std::string(argv[2]) != "req") {
-        std::cerr << "Usage: c509 req --alg <algorithm>\n";
+    if (argc < 7 || std::string(argv[1]) != "c509" || std::string(argv[2]) != "req" || std::string(argv[3]) != "--alg") {
+        std::cerr << "Usage: c509 req --alg <algorithm> --out-csr <csr_file> --out-key <key_file>\n";
         return 1;
     }
 
-    std::string algorithm;
-    if (argc >= 5 && std::string(argv[3]) == "--alg") {
-        algorithm = argv[4];
-    } else {
-        std::cerr << "Error: Missing --alg <algorithm> argument.\n";
+    std::string algorithm = argv[4];
+    std::string csr_filename;
+    std::string key_filename;
+
+    for (int i = 5; i < argc; i++) {
+        if (std::string(argv[i]) == "--out-csr" && i + 1 < argc) {
+            csr_filename = argv[i + 1];
+        } else if (std::string(argv[i]) == "--out-key" && i + 1 < argc) {
+            key_filename = argv[i + 1];
+        }
+    }
+
+    if (csr_filename.empty() || key_filename.empty()) {
+        std::cerr << "Error: Missing output file paths for CSR and/or private key.\n";
         return 1;
     }
 
@@ -77,8 +86,8 @@ int main(const int argc, char *argv[]) {
         return 1;
     }
 
-    writeBinaryFile("csr_output.bin", csr_out, csr_out_size);
-    writeBinaryFile("private_key.bin", private_key_out, private_key_out_size);
+    writeBinaryFile(csr_filename, csr_out, csr_out_size);
+    writeBinaryFile(key_filename, private_key_out, private_key_out_size);
 
     std::cout << "CSR and private key successfully generated and saved!\n";
     return 0;

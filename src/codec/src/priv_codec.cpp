@@ -3,6 +3,9 @@
 using namespace C509;
 
 bool CBORCodec<C509PrivateKey>::encode(zcbor_state_t *state, const C509PrivateKey &input) {
+    if (!zcbor_list_start_encode(state, 2))
+        ZCBOR_ERR(C509_ERR_PRIV_ENC_LIST_START);
+
     if (!CBORCodec<AlgorithmIdentifier>::encode(state, input.subjectPrivateKeyAlgorithm))
         ZCBOR_ERR(C509_ERR_PRIV_ENC_ATTR);
 
@@ -10,11 +13,16 @@ bool CBORCodec<C509PrivateKey>::encode(zcbor_state_t *state, const C509PrivateKe
                                input.subjectPrivateKey.size()))
         ZCBOR_ERR(C509_ERR_PRIV_ENC_BSTR);
 
+    if (!zcbor_list_end_encode(state, 2))
+        ZCBOR_ERR(C509_ERR_PRIV_ENC_LIST_END);
 
     return true;
 }
 
 bool CBORCodec<C509PrivateKey>::decode(zcbor_state_t *state, C509PrivateKey &output) {
+    if (!zcbor_list_start_decode(state))
+        ZCBOR_ERR(C509_ERR_PRIV_DEC_LIST_START);
+
     if (!CBORCodec<AlgorithmIdentifier>::decode(state, output.subjectPrivateKeyAlgorithm))
         ZCBOR_ERR(C509_ERR_PRIV_DEC_ATTR);
 
@@ -28,6 +36,9 @@ bool CBORCodec<C509PrivateKey>::decode(zcbor_state_t *state, C509PrivateKey &out
 
     if (!output.subjectPrivateKey.copy(str.value, str.len))
         ZCBOR_ERR(C509_ERR_PRIV_DEC_BUFFER_ERROR);
+
+    if (!zcbor_list_end_decode(state))
+        ZCBOR_ERR(C509_ERR_PRIV_DEC_LIST_END);
 
     return true;
 }

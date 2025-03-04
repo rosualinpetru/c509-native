@@ -60,8 +60,6 @@ namespace C509 {
     namespace CSR {
         DECLARE_CBOR_CODEC_TEMPLATE()
 
-        DECLARE_CBOR_CODEC(ChallengePassword)
-
         DECLARE_CBOR_CODEC(TBSCertificateRequest)
 
         DECLARE_CBOR_CODEC(C509CertificateRequest)

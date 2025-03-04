@@ -10,7 +10,7 @@ add_executable(UnitTestsCodec
     test_ext_codec.cpp
     test_crypto.cpp)
 
-target_link_libraries(UnitTestsCodec PUBLIC c509_codec OpenSSL::Crypto oqsprovider)
+target_link_libraries(UnitTestsCodec PUBLIC c509_codec c509_crypto c509_core)
 target_link_libraries(UnitTestsCodec PRIVATE Catch2::Catch2WithMain)
 
 target_include_directories(UnitTestsCodec

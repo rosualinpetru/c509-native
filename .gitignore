@@ -7,6 +7,8 @@ build/
 build-*/
 html/
 .vscode/
+cmake-build-debug/
+.idea/
 
 ################################
 ############ C/C++ #############

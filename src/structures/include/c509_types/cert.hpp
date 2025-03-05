@@ -13,21 +13,21 @@
 
 namespace C509 {
     struct TBSCertificate {
-        uint8_t c509CertificateType;
-        CertificateSerialNumber certificateSerialNumber;
-        AlgorithmIdentifier issuerSignatureAlgorithm;
+        uint8_t c509_certificate_type{};
+        CertificateSerialNumber certificate_serial_number;
+        AlgorithmIdentifier issuer_signature_algorithm;
         optional<Name> issuer;
-        Time validityNotBefore;
-        optional<Time> validityNotAfter;
+        Time validity_not_before{};
+        optional<Time> validity_not_after;
         Name subject;
-        AlgorithmIdentifier subjectPublicKeyAlgorithm;
-        SubjectPublicKey subjectPublicKey;
+        AlgorithmIdentifier subject_public_key_algorithm;
+        SubjectPublicKey subject_public_key;
         Extensions extensions;
     };
 
     struct C509Certificate {
-        TBSCertificate tbsCertificate;
-        SignatureValue signatureValue;
+        TBSCertificate tbs_certificate;
+        SignatureValue signature_value;
     };
 }
 

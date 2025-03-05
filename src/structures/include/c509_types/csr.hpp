@@ -9,17 +9,17 @@
 
 namespace C509::CSR {
     struct TBSCertificateRequest {
-        uint8_t c509CertificateRequestType;
-        AlgorithmIdentifier subjectSignatureAlgorithm;
+        uint8_t c509_certificate_request_type{};
+        AlgorithmIdentifier subject_signature_algorithm;
         Name subject;
-        AlgorithmIdentifier subjectPublicKeyAlgorithm;
-        SubjectPublicKey subjectPublicKey;
-        Extensions extensionsRequest;
+        AlgorithmIdentifier subject_public_key_algorithm;
+        SubjectPublicKey subject_public_key;
+        Extensions extensions_request;
     };
 
     struct C509CertificateRequest {
-        TBSCertificateRequest tbsCertificateRequest;
-        SignatureValue subjectSignatureValue;
+        TBSCertificateRequest tbs_certificate_request;
+        SignatureValue subject_signature_value;
     };
 }
 

@@ -23,6 +23,12 @@ include(FetchContent)
 include(Docs)
 
 ### External libraries
+FetchContent_Declare(
+        argparse
+        GIT_REPOSITORY https://github.com/p-ranav/argparse
+        GIT_TAG v3.2
+        GIT_SHALLOW TRUE)
+FetchContent_MakeAvailable(argparse)
 
 # zcbor 
 # add_compile_definitions(ZCBOR_VERBOSE=1) # useful for debugging

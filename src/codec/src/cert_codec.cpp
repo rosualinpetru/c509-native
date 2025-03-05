@@ -4,26 +4,26 @@ using namespace C509;
 
 bool CBORCodec<C509Certificate>::encode(zcbor_state_t *state, const C509Certificate &input) {
     return zcbor_list_start_encode(state, 11) &&
-           CBORCodec<TBSCertificate>::encode(state, input.tbsCertificate) &&
-           CBORCodec<SignatureValue>::encode(state, input.signatureValue) &&
+           CBORCodec<TBSCertificate>::encode(state, input.tbs_certificate) &&
+           CBORCodec<SignatureValue>::encode(state, input.signature_value) &&
            zcbor_list_end_encode(state, 11);
 }
 
 bool CBORCodec<C509Certificate>::decode(zcbor_state_t *state, C509Certificate &output) {
     return zcbor_list_start_decode(state) &&
-           CBORCodec<TBSCertificate>::decode(state, output.tbsCertificate) &&
-           CBORCodec<SignatureValue>::decode(state, output.signatureValue) &&
+           CBORCodec<TBSCertificate>::decode(state, output.tbs_certificate) &&
+           CBORCodec<SignatureValue>::decode(state, output.signature_value) &&
            zcbor_list_end_decode(state);
 }
 
 bool CBORCodec<TBSCertificate>::encode(zcbor_state_t *state, const TBSCertificate &input) {
-    if (input.c509CertificateType != 2 || !zcbor_uint32_put(state, 2))
+    if (input.c509_certificate_type != 2 || !zcbor_uint32_put(state, 2))
         ZCBOR_ERR(C509_ERR_TBSCERT_ENC_CERT_TYPE);
 
-    if (!CBORCodec<CertificateSerialNumber>::encode(state, input.certificateSerialNumber))
+    if (!CBORCodec<CertificateSerialNumber>::encode(state, input.certificate_serial_number))
         ZCBOR_ERR(C509_ERR_TBSCERT_ENC_SERIAL_NUMBER);
 
-    if (!CBORCodec<AlgorithmIdentifier>::encode(state, input.issuerSignatureAlgorithm))
+    if (!CBORCodec<AlgorithmIdentifier>::encode(state, input.issuer_signature_algorithm))
         ZCBOR_ERR(C509_ERR_TBSCERT_ENC_ISSUER_SIG_ALG);
 
     if (input.issuer.has()) {
@@ -33,11 +33,11 @@ bool CBORCodec<TBSCertificate>::encode(zcbor_state_t *state, const TBSCertificat
     } else if (!zcbor_nil_put(state, nullptr))
         ZCBOR_ERR(C509_ERR_TBSCERT_ENC_ISSUER_NIL);
 
-    if (!CBORCodec<Time>::encode_unwrapped(state, input.validityNotBefore))
+    if (!CBORCodec<Time>::encode_unwrapped(state, input.validity_not_before))
         ZCBOR_ERR(C509_ERR_TBSCERT_ENC_VALIDITY_NOT_BEFORE);
 
-    if (input.validityNotAfter.has() && input.validityNotAfter.get().epoch_seconds != 99991231235959) {
-        if (!CBORCodec<Time>::encode_unwrapped(state, input.validityNotAfter.get()))
+    if (input.validity_not_after.has() && input.validity_not_after.get().epoch_seconds != 99991231235959) {
+        if (!CBORCodec<Time>::encode_unwrapped(state, input.validity_not_after.get()))
             ZCBOR_ERR(C509_ERR_TBSCERT_ENC_VALIDITY_NOT_AFTER);
     } else if (!zcbor_nil_put(state, nullptr))
         ZCBOR_ERR(C509_ERR_TBSCERT_ENC_VALIDITY_NIL);
@@ -45,10 +45,10 @@ bool CBORCodec<TBSCertificate>::encode(zcbor_state_t *state, const TBSCertificat
     if (!CBORCodec<Name>::encode(state, input.subject))
         ZCBOR_ERR(C509_ERR_TBSCERT_ENC_SUBJECT);
 
-    if (!CBORCodec<AlgorithmIdentifier>::encode(state, input.subjectPublicKeyAlgorithm))
+    if (!CBORCodec<AlgorithmIdentifier>::encode(state, input.subject_public_key_algorithm))
         ZCBOR_ERR(C509_ERR_TBSCERT_ENC_SUBJ_PUBKEY_ALG);
 
-    if (!CBORCodec<SubjectPublicKey>::encode(state, input.subjectPublicKey))
+    if (!CBORCodec<SubjectPublicKey>::encode(state, input.subject_public_key))
         ZCBOR_ERR(C509_ERR_TBSCERT_ENC_SUBJ_PUBKEY);
 
     if (!CBORCodec<Extensions>::encode(state, input.extensions))
@@ -61,12 +61,12 @@ bool CBORCodec<TBSCertificate>::decode(zcbor_state_t *state, TBSCertificate &out
     if (!zcbor_uint32_expect(state, 2))
         ZCBOR_ERR(C509_ERR_TBSCERT_DEC_CERT_TYPE);
 
-    output.c509CertificateType = 2;
+    output.c509_certificate_type = 2;
 
-    if (!CBORCodec<CertificateSerialNumber>::decode(state, output.certificateSerialNumber))
+    if (!CBORCodec<CertificateSerialNumber>::decode(state, output.certificate_serial_number))
         ZCBOR_ERR(C509_ERR_TBSCERT_DEC_SERIAL_NUMBER);
 
-    if (!CBORCodec<AlgorithmIdentifier>::decode(state, output.issuerSignatureAlgorithm))
+    if (!CBORCodec<AlgorithmIdentifier>::decode(state, output.issuer_signature_algorithm))
         ZCBOR_ERR(C509_ERR_TBSCERT_DEC_ISSUER_SIG_ALG);
 
     if (zcbor_nil_expect(state, nullptr))
@@ -78,24 +78,24 @@ bool CBORCodec<TBSCertificate>::decode(zcbor_state_t *state, TBSCertificate &out
         output.issuer.set_has();
     }
 
-    if (!CBORCodec<Time>::decode_unwrapped(state, output.validityNotBefore))
+    if (!CBORCodec<Time>::decode_unwrapped(state, output.validity_not_before))
         ZCBOR_ERR(C509_ERR_TBSCERT_DEC_VALIDITY_NOT_BEFORE);
 
     if (zcbor_nil_expect(state, nullptr))
-        output.validityNotAfter.reset();
+        output.validity_not_after.reset();
     else {
-        if (!CBORCodec<Time>::decode_unwrapped(state, output.validityNotAfter.get()))
+        if (!CBORCodec<Time>::decode_unwrapped(state, output.validity_not_after.get()))
             ZCBOR_ERR(C509_ERR_TBSCERT_DEC_VALIDITY_NOT_AFTER);
-        output.validityNotAfter.set_has();
+        output.validity_not_after.set_has();
     }
 
     if (!CBORCodec<Name>::decode(state, output.subject))
         ZCBOR_ERR(C509_ERR_TBSCERT_DEC_SUBJECT);
 
-    if (!CBORCodec<AlgorithmIdentifier>::decode(state, output.subjectPublicKeyAlgorithm))
+    if (!CBORCodec<AlgorithmIdentifier>::decode(state, output.subject_public_key_algorithm))
         ZCBOR_ERR(C509_ERR_TBSCERT_DEC_SUBJ_PUBKEY_ALG);
 
-    if (!CBORCodec<SubjectPublicKey>::decode(state, output.subjectPublicKey))
+    if (!CBORCodec<SubjectPublicKey>::decode(state, output.subject_public_key))
         ZCBOR_ERR(C509_ERR_TBSCERT_DEC_SUBJ_PUBKEY);
 
     if (!CBORCodec<Extensions>::decode(state, output.extensions))

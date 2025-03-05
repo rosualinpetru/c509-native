@@ -14,24 +14,24 @@
 
 namespace C509::CRL {
     struct RevokedCertificate {
-        CertificateSerialNumber userCertificate;
-        Time revocationDate;
-        Extensions crlEntryExtensions;
+        CertificateSerialNumber user_certificate;
+        Time revocation_date;
+        Extensions crl_entry_extensions;
     };
 
     struct TBSCertificateRevocationList {
-        uint8_t c509CertificateRevocationListType;
+        uint8_t c509_certificate_revocation_list_type{};
         Name issuer;
-        Time thisUpdate;
-        Time nextUpdate;
-        bounded_array<RevokedCertificate, MAX_REVOKED_CERTIFICATES> revokedCertificates;
-        Extensions crlExtensions;
-        AlgorithmIdentifier issuerSignatureAlgorithm;
+        Time this_update{};
+        Time next_update{};
+        bounded_array<RevokedCertificate, MAX_REVOKED_CERTIFICATES> revoked_certificates;
+        Extensions crl_extensions;
+        AlgorithmIdentifier issuer_signature_algorithm;
     };
 
     struct C509CertificateRevocationList {
-        TBSCertificateRevocationList tbsCertificateRevocationList;
-        SignatureValue issuerSignatureValue;
+        TBSCertificateRevocationList tbs_certificate_revocation_list;
+        SignatureValue issuer_signature_value;
     };
 }
 

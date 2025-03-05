@@ -18,9 +18,9 @@ namespace C509 {
         } type;
 
         struct {
-            OID extensionID;
+            OID extension_id;
             bool critical;
-            bounded_array<uint8_t, MAX_EXTENSION_BYTES> extensionValue;
+            bounded_array<uint8_t, MAX_EXTENSION_BYTES> extension_value;
         } oidExtension;
     };
 
@@ -28,10 +28,10 @@ namespace C509 {
         enum class Type {
             MixedKeyUsage,
             List
-        } type;
+        } type{};
 
         union {
-            int64_t mixedKeyUsage;
+            int64_t mixed_key_usage{};
             bounded_array<Extension, MAX_EXTENSIONS_LIST_SIZE> extensions;
         };
     };

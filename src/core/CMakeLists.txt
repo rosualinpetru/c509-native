@@ -1,6 +1,7 @@
 add_library(c509_core STATIC
         src/csr/gen.cpp
-        src/util/algid_mapper.cpp
+        src/keygen.cpp
+        src/map_algid_to_oid.cpp
 )
 
 target_include_directories(c509_core
@@ -10,7 +11,7 @@ target_include_directories(c509_core
 )
 
 target_link_libraries(c509_core
-        PUBLIC
+        PRIVATE
         c509_structures
         c509_codec
         c509_crypto

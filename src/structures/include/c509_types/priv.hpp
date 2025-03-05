@@ -14,8 +14,8 @@ namespace C509 {
     // https://www.ietf.org/arrchive/id/draft-ietf-cose-cbor-encoded-cert-12.html
     // For now, only bstr keys are considered.
     struct C509PrivateKey {
-        AlgorithmIdentifier subjectPrivateKeyAlgorithm;
-        bounded_array<uint8_t, MAX_PRIV_KEY_BYTES> subjectPrivateKey;
+        AlgorithmIdentifier subject_private_key_algorithm;
+        bounded_array<uint8_t, MAX_PRIV_KEY_BYTES> subject_private_key;
     };
 }
 

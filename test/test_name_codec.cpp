@@ -18,12 +18,12 @@ TEST_CASE("Name Encoding - Attributes Type") {
     Attribute *attr2 = &name.attributes[1];
 
     attr1->type = Attribute::Type::Int;
-    attr1->intAttribute.attributeType = 42;
-    attr1->intAttribute.attributeValue.copy({0x12, 0x34});
+    attr1->intAttribute.attribute_type = 42;
+    attr1->intAttribute.attribute_value.copy({0x12, 0x34});
 
     attr2->type = Attribute::Type::OID;
-    attr2->oidAttribute.attributeType.subids.copy({2, 16, 840});
-    attr2->oidAttribute.attributeValue.copy({0x56, 0x78, 0x99});
+    attr2->oidAttribute.attribute_type.subids.copy({2, 16, 840});
+    attr2->oidAttribute.attribute_value.copy({0x56, 0x78, 0x99});
 
     // Output
     uint8_t out[MAX_NAME_RAW];

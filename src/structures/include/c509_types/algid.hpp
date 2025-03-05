@@ -11,15 +11,15 @@ namespace C509 {
         enum class Type {
             Int,
             OID
-        } type;
+        } type{};
 
         union {
-            uint8_t intAlgorithmIdentifier;
+            uint8_t int_algorithm_identifier{};
 
             struct {
-                OID algorithmIdentifier;
+                OID algorithm_identifier;
                 optional<bounded_array<uint8_t, MAX_ALGORITHM_IDENTIFIER_PARAMETER_BYTES> > parameters;
-            } oidAlgorithmIdentifier;
+            } oid_algorithm_identifier;
         };
     };
 }

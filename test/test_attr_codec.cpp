@@ -11,8 +11,8 @@ TEST_CASE("Attribute Encoding - Int Type") {
     // Input
     Attribute attr{};
     attr.type = Attribute::Type::Int;
-    attr.intAttribute.attributeType = 15;
-    attr.intAttribute.attributeValue.copy({0x12, 0x34, 0x56});
+    attr.intAttribute.attribute_type = 15;
+    attr.intAttribute.attribute_value.copy({0x12, 0x34, 0x56});
 
     // Output
     uint8_t out[MAX_ATTRIBUTE_VALUE_TSTR_BYTES];
@@ -38,8 +38,8 @@ TEST_CASE("Attribute Encoding - OID Type") {
     // Input
     Attribute attr{};
     attr.type = Attribute::Type::OID;
-    attr.oidAttribute.attributeType.subids.copy({2, 16, 840, 1, 101, 3, 4, 2, 1});
-    attr.oidAttribute.attributeValue.copy({0x56, 0x78, 0x99});
+    attr.oidAttribute.attribute_type.subids.copy({2, 16, 840, 1, 101, 3, 4, 2, 1});
+    attr.oidAttribute.attribute_value.copy({0x56, 0x78, 0x99});
 
     // Output
     uint8_t out[MAX_ATTRIBUTE_VALUE_BSTR_BYTES];
@@ -77,10 +77,10 @@ TEST_CASE("Attribute Decoding - Int Type") {
     // Assertions
     REQUIRE(res == ZCBOR_SUCCESS);
     REQUIRE(attr.type == Attribute::Type::Int);
-    REQUIRE(attr.intAttribute.attributeType == 15);
-    REQUIRE(attr.intAttribute.attributeValue.size() == 2);
-    REQUIRE(HexByte(attr.intAttribute.attributeValue[0]) == HexByte(0x12));
-    REQUIRE(HexByte(attr.intAttribute.attributeValue[1]) == HexByte(0x34));
+    REQUIRE(attr.intAttribute.attribute_type == 15);
+    REQUIRE(attr.intAttribute.attribute_value.size() == 2);
+    REQUIRE(HexByte(attr.intAttribute.attribute_value[0]) == HexByte(0x12));
+    REQUIRE(HexByte(attr.intAttribute.attribute_value[1]) == HexByte(0x34));
 }
 
 TEST_CASE("Attribute Decoding - OID Type") {
@@ -100,14 +100,14 @@ TEST_CASE("Attribute Decoding - OID Type") {
 
     uint32_t expected_subids[] = {2, 16, 840, 1, 101, 3, 4, 2, 1};
 
-    REQUIRE(attr.oidAttribute.attributeType.subids.size() == sizeof(expected_subids) / sizeof(uint32_t));
+    REQUIRE(attr.oidAttribute.attribute_type.subids.size() == sizeof(expected_subids) / sizeof(uint32_t));
 
-    for (size_t i = 0; i < attr.oidAttribute.attributeType.subids.size(); i++)
+    for (size_t i = 0; i < attr.oidAttribute.attribute_type.subids.size(); i++)
     SECTION("Checking index " + std::to_string(i)) {
-        REQUIRE(attr.oidAttribute.attributeType.subids[i] == expected_subids[i]);
+        REQUIRE(attr.oidAttribute.attribute_type.subids[i] == expected_subids[i]);
     }
 
-    REQUIRE(attr.oidAttribute.attributeValue.size() == 2);
-    REQUIRE(HexByte(attr.oidAttribute.attributeValue[0]) == HexByte(0x56));
-    REQUIRE(HexByte(attr.oidAttribute.attributeValue[1]) == HexByte(0x78));
+    REQUIRE(attr.oidAttribute.attribute_value.size() == 2);
+    REQUIRE(HexByte(attr.oidAttribute.attribute_value[0]) == HexByte(0x56));
+    REQUIRE(HexByte(attr.oidAttribute.attribute_value[1]) == HexByte(0x78));
 }

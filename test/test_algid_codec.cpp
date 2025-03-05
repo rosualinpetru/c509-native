@@ -12,7 +12,7 @@ TEST_CASE("AlgorithmIdentifier Encoding - Int Type") {
     // Input
     AlgorithmIdentifier algId{};
     algId.type = AlgorithmIdentifier::Type::Int;
-    algId.intAlgorithmIdentifier = 15;
+    algId.int_algorithm_identifier = 15;
 
     // Output
     uint8_t out[MAX_ALGORITHM_IDENTIFIER_PARAMETER_BYTES];
@@ -31,7 +31,7 @@ TEST_CASE("AlgorithmIdentifier Encoding - OID Type") {
     // Input
     AlgorithmIdentifier algId{};
     algId.type = AlgorithmIdentifier::Type::OID;
-    algId.oidAlgorithmIdentifier.algorithmIdentifier.subids.copy({2, 16, 840, 1, 101, 3, 4, 2, 1});
+    algId.oid_algorithm_identifier.algorithm_identifier.subids.copy({2, 16, 840, 1, 101, 3, 4, 2, 1});
 
     // Output
     constexpr size_t max_size = MAX_OID_SUBIDS * sizeof(uint32_t) + sizeof(uint32_t);
@@ -58,9 +58,9 @@ TEST_CASE("AlgorithmIdentifier Encoding - OID Type with Parameters") {
     // Input
     AlgorithmIdentifier algId{};
     algId.type = AlgorithmIdentifier::Type::OID;
-    algId.oidAlgorithmIdentifier.algorithmIdentifier.subids.copy({2, 16, 840, 1, 101, 3, 4, 2, 1});
-    algId.oidAlgorithmIdentifier.parameters.get().copy({0x0a, 0x0b, 0x0c});
-    algId.oidAlgorithmIdentifier.parameters.set_has();
+    algId.oid_algorithm_identifier.algorithm_identifier.subids.copy({2, 16, 840, 1, 101, 3, 4, 2, 1});
+    algId.oid_algorithm_identifier.parameters.get().copy({0x0a, 0x0b, 0x0c});
+    algId.oid_algorithm_identifier.parameters.set_has();
 
     // Output
     constexpr size_t max_size = MAX_OID_SUBIDS * sizeof(uint32_t) + sizeof(uint32_t) +
@@ -100,7 +100,7 @@ TEST_CASE("AlgorithmIdentifier Decoding - Int Type") {
     // Assertions
     REQUIRE(res == ZCBOR_SUCCESS);
     REQUIRE(algId.type == C509::AlgorithmIdentifier::Type::Int);
-    REQUIRE(algId.intAlgorithmIdentifier == 15);
+    REQUIRE(algId.int_algorithm_identifier == 15);
 }
 
 TEST_CASE("AlgorithmIdentifier Decoding - OID Type") {
@@ -117,15 +117,15 @@ TEST_CASE("AlgorithmIdentifier Decoding - OID Type") {
     // Assertions
     REQUIRE(res == ZCBOR_SUCCESS);
     REQUIRE(algId.type == C509::AlgorithmIdentifier::Type::OID);
-    REQUIRE(algId.oidAlgorithmIdentifier.parameters.has() == false);
+    REQUIRE(algId.oid_algorithm_identifier.parameters.has() == false);
 
     uint32_t expected_subids[] = {2, 16, 840, 1, 101, 3, 4, 2, 1};
     REQUIRE(
-        algId.oidAlgorithmIdentifier.algorithmIdentifier.subids.size() == sizeof(expected_subids) / sizeof(uint32_t));
+        algId.oid_algorithm_identifier.algorithm_identifier.subids.size() == sizeof(expected_subids) / sizeof(uint32_t));
 
-    for (size_t i = 0; i < algId.oidAlgorithmIdentifier.algorithmIdentifier.subids.size(); i++)
+    for (size_t i = 0; i < algId.oid_algorithm_identifier.algorithm_identifier.subids.size(); i++)
     SECTION("Checking index " + std::to_string(i)) {
-        REQUIRE(algId.oidAlgorithmIdentifier.algorithmIdentifier.subids[i] == expected_subids[i]);
+        REQUIRE(algId.oid_algorithm_identifier.algorithm_identifier.subids[i] == expected_subids[i]);
     }
 }
 
@@ -145,12 +145,12 @@ TEST_CASE("AlgorithmIdentifier Decoding - OID Type with Parameters") {
     // Assertions
     REQUIRE(res == ZCBOR_SUCCESS);
     REQUIRE(algId.type == C509::AlgorithmIdentifier::Type::OID);
-    REQUIRE(algId.oidAlgorithmIdentifier.parameters.has() == true);
+    REQUIRE(algId.oid_algorithm_identifier.parameters.has() == true);
     uint8_t expected_params[] = {0x0a, 0x0b, 0x0c};
-    REQUIRE(algId.oidAlgorithmIdentifier.parameters.get().size() == sizeof(expected_params));
+    REQUIRE(algId.oid_algorithm_identifier.parameters.get().size() == sizeof(expected_params));
 
     for (size_t i = 0; i < sizeof(expected_params); i++)
     SECTION("Checking index " + std::to_string(i)) {
-        REQUIRE(HexByte(algId.oidAlgorithmIdentifier.parameters.get()[i]) == HexByte(expected_params[i]));
+        REQUIRE(HexByte(algId.oid_algorithm_identifier.parameters.get()[i]) == HexByte(expected_params[i]));
     }
 }

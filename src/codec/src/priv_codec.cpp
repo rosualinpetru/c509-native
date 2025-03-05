@@ -6,11 +6,11 @@ bool CBORCodec<C509PrivateKey>::encode(zcbor_state_t *state, const C509PrivateKe
     if (!zcbor_list_start_encode(state, 2))
         ZCBOR_ERR(C509_ERR_PRIV_ENC_LIST_START);
 
-    if (!CBORCodec<AlgorithmIdentifier>::encode(state, input.subjectPrivateKeyAlgorithm))
+    if (!CBORCodec<AlgorithmIdentifier>::encode(state, input.subject_private_key_algorithm))
         ZCBOR_ERR(C509_ERR_PRIV_ENC_ATTR);
 
-    if (!zcbor_bstr_encode_ptr(state, reinterpret_cast<const char *>(input.subjectPrivateKey.data()),
-                               input.subjectPrivateKey.size()))
+    if (!zcbor_bstr_encode_ptr(state, reinterpret_cast<const char *>(input.subject_private_key.data()),
+                               input.subject_private_key.size()))
         ZCBOR_ERR(C509_ERR_PRIV_ENC_BSTR);
 
     if (!zcbor_list_end_encode(state, 2))
@@ -23,7 +23,7 @@ bool CBORCodec<C509PrivateKey>::decode(zcbor_state_t *state, C509PrivateKey &out
     if (!zcbor_list_start_decode(state))
         ZCBOR_ERR(C509_ERR_PRIV_DEC_LIST_START);
 
-    if (!CBORCodec<AlgorithmIdentifier>::decode(state, output.subjectPrivateKeyAlgorithm))
+    if (!CBORCodec<AlgorithmIdentifier>::decode(state, output.subject_private_key_algorithm))
         ZCBOR_ERR(C509_ERR_PRIV_DEC_ATTR);
 
     zcbor_string str{};
@@ -34,7 +34,7 @@ bool CBORCodec<C509PrivateKey>::decode(zcbor_state_t *state, C509PrivateKey &out
     if (str.len >= MAX_SIG_BYTES)
         ZCBOR_ERR(C509_ERR_PRIV_DEC_INVALID_LENGTH);
 
-    if (!output.subjectPrivateKey.copy(str.value, str.len))
+    if (!output.subject_private_key.copy(str.value, str.len))
         ZCBOR_ERR(C509_ERR_PRIV_DEC_BUFFER_ERROR);
 
     if (!zcbor_list_end_decode(state))

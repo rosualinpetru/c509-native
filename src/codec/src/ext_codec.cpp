@@ -5,7 +5,7 @@ using namespace C509;
 bool CBORCodec<Extension>::encode(zcbor_state_t *state, const Extension &input) {
     switch (input.type) {
         case Extension::Type::OID:
-            if (!CBORCodec<OID>::encode_unwrapped(state, input.oidExtension.extensionID))
+            if (!CBORCodec<OID>::encode_unwrapped(state, input.oidExtension.extension_id))
                 ZCBOR_ERR(C509_ERR_EXT_ENC_OID);
 
             if (!zcbor_bool_put(state, input.oidExtension.critical))
@@ -13,8 +13,8 @@ bool CBORCodec<Extension>::encode(zcbor_state_t *state, const Extension &input) 
 
             if (!zcbor_bstr_encode_ptr(
                 state,
-                reinterpret_cast<const char *>(input.oidExtension.extensionValue.data()),
-                input.oidExtension.extensionValue.size()))
+                reinterpret_cast<const char *>(input.oidExtension.extension_value.data()),
+                input.oidExtension.extension_value.size()))
                 ZCBOR_ERR(C509_ERR_EXT_ENC_BSTR_VALUE);
 
             return true;
@@ -25,7 +25,7 @@ bool CBORCodec<Extension>::encode(zcbor_state_t *state, const Extension &input) 
 }
 
 bool CBORCodec<Extension>::decode(zcbor_state_t *state, Extension &output) {
-    if (!CBORCodec<OID>::decode_unwrapped(state, output.oidExtension.extensionID))
+    if (!CBORCodec<OID>::decode_unwrapped(state, output.oidExtension.extension_id))
         ZCBOR_ERR(C509_ERR_EXT_DEC_OID);
 
     if (!zcbor_bool_decode(state, &output.oidExtension.critical))
@@ -38,7 +38,7 @@ bool CBORCodec<Extension>::decode(zcbor_state_t *state, Extension &output) {
     if (str.len > MAX_EXTENSION_BYTES)
         ZCBOR_ERR(C509_ERR_EXT_DEC_INVALID_LENGTH);
 
-    if (!output.oidExtension.extensionValue.copy(str.value, str.len))
+    if (!output.oidExtension.extension_value.copy(str.value, str.len))
         ZCBOR_ERR(C509_ERR_EXT_DEC_BUFFER_ERROR);
 
     output.type = Extension::Type::OID;
@@ -48,7 +48,7 @@ bool CBORCodec<Extension>::decode(zcbor_state_t *state, Extension &output) {
 bool CBORCodec<Extensions>::encode(zcbor_state_t *state, const Extensions &input) {
     switch (input.type) {
         case Extensions::Type::MixedKeyUsage:
-            if (!zcbor_int64_put(state, input.mixedKeyUsage))
+            if (!zcbor_int64_put(state, input.mixed_key_usage))
                 ZCBOR_ERR(C509_ERR_EXTS_ENC_MKU);
 
             return true;
@@ -72,7 +72,7 @@ bool CBORCodec<Extensions>::encode(zcbor_state_t *state, const Extensions &input
 bool CBORCodec<Extensions>::decode(zcbor_state_t *state, Extensions &output) {
     int64_t int_value;
     if (zcbor_int64_decode(state, &int_value)) {
-        output.mixedKeyUsage = int_value;
+        output.mixed_key_usage = int_value;
         output.type = Extensions::Type::MixedKeyUsage;
         return true;
     }

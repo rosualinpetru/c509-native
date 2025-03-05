@@ -4,8 +4,8 @@
 #include "c509_types/types.hpp"
 
 #define DECLARE_CODEC(Type)                                                                       \
-    int encode(uint8_t *payload, size_t payload_len, const Type *input, size_t *payload_len_out); \
-    int decode(const uint8_t *payload, size_t payload_len, Type *result, size_t *payload_len_out);
+    int cbor_encode(uint8_t *payload, size_t payload_len, const Type *input, size_t *payload_len_out); \
+    int cbor_decode(const uint8_t *payload, size_t payload_len, Type *result, size_t *payload_len_out);
 
 namespace C509 {
     DECLARE_CODEC(C509Certificate)

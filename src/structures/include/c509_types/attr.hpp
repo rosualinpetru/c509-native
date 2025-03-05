@@ -16,17 +16,17 @@ namespace C509 {
             Unset,
             Int,
             OID
-        } type;
+        } type{};
 
         union {
             struct {
-                uint8_t attributeType; // int32_t if compatibility with re-encoded certs is needed
-                bounded_array<uint8_t, MAX_ATTRIBUTE_VALUE_TSTR_BYTES> attributeValue;
+                uint8_t attribute_type; // int32_t if compatibility with re-encoded certs is needed
+                bounded_array<uint8_t, MAX_ATTRIBUTE_VALUE_TSTR_BYTES> attribute_value;
             } intAttribute;
 
             struct {
-                OID attributeType;
-                bounded_array<uint8_t, MAX_ATTRIBUTE_VALUE_BSTR_BYTES> attributeValue;
+                OID attribute_type;
+                bounded_array<uint8_t, MAX_ATTRIBUTE_VALUE_BSTR_BYTES> attribute_value;
             } oidAttribute;
         };
     };

@@ -5,33 +5,33 @@
 #define ZCBOR_STATES_CSR 15 // TODO
 #define ZCBOR_STATES_CRL 15 // TODO
 
-#define ZCBOR_ENTRY_CODEC_IMPL(Type, States)                                                    \
-    int encode(uint8_t *payload, size_t payload_len, const Type *input, size_t *payload_len_out) \
-    {                                                                                            \
-        zcbor_state_t states[States];                                                            \
-        return zcbor_entry_function(                                                             \
-            payload,                                                                             \
-            payload_len,                                                                         \
-            (void *)input,                                                                       \
-            payload_len_out,                                                                     \
-            states,                                                                              \
-            (zcbor_decoder_t *)CBORCodec<Type>::encode,                                          \
-            sizeof(states) / sizeof(zcbor_state_t),                                              \
-            1);                                                                                  \
-    }                                                                                             \
-    \
-    int decode(const uint8_t *payload, size_t payload_len, Type *result, size_t *payload_len_out) \
-    {                                                                                             \
-        zcbor_state_t states[States];                                                             \
-        return zcbor_entry_function(                                                              \
-            payload,                                                                              \
-            payload_len,                                                                          \
-            (void *)result,                                                                       \
-            payload_len_out,                                                                      \
-            states,                                                                               \
-            (zcbor_decoder_t *)CBORCodec<Type>::decode,                                           \
-            sizeof(states) / sizeof(zcbor_state_t),                                               \
-            1);                                                                                   \
+#define ZCBOR_ENTRY_CODEC_IMPL(Type, States)                                                          \
+    int cbor_encode(uint8_t *payload, size_t payload_len, const Type *input, size_t *payload_len_out) \
+    {                                                                                                 \
+        zcbor_state_t states[States];                                                                 \
+        return zcbor_entry_function(                                                                  \
+            payload,                                                                                  \
+            payload_len,                                                                              \
+            (void *)input,                                                                            \
+            payload_len_out,                                                                          \
+            states,                                                                                   \
+            (zcbor_decoder_t *)CBORCodec<Type>::encode,                                               \
+            sizeof(states) / sizeof(zcbor_state_t),                                                   \
+            1);                                                                                       \
+    }                                                                                                 \
+                                                                                                      \
+    int cbor_encode(const uint8_t *payload, size_t payload_len, Type *result, size_t *payload_len_out) \
+    {                                                                                                  \
+        zcbor_state_t states[States];                                                                  \
+        return zcbor_entry_function(                                                                   \
+            payload,                                                                                   \
+            payload_len,                                                                               \
+            (void *)result,                                                                            \
+            payload_len_out,                                                                           \
+            states,                                                                                    \
+            (zcbor_decoder_t *)CBORCodec<Type>::decode,                                                \
+            sizeof(states) / sizeof(zcbor_state_t),                                                    \
+            1);                                                                                        \
     }
 
 namespace C509 {

@@ -20,7 +20,7 @@
             1);                                                                                       \
     }                                                                                                 \
                                                                                                       \
-    int cbor_encode(const uint8_t *payload, size_t payload_len, Type *result, size_t *payload_len_out) \
+    int cbor_decode(const uint8_t *payload, size_t payload_len, Type *result, size_t *payload_len_out) \
     {                                                                                                  \
         zcbor_state_t states[States];                                                                  \
         return zcbor_entry_function(                                                                   \

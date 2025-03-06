@@ -17,11 +17,29 @@ int handle_genpkey(const argparse::ArgumentParser &genpkey_cmd) {
     uint8_t private_key_out[MAX_BUFFER_SIZE] = {};
     size_t private_key_out_size = sizeof(private_key_out);
 
-    if (!C509::keygen(algorithm, private_key_out, private_key_out_size)) {
+    if (!keygen(algorithm, private_key_out, private_key_out_size)) {
         std::cerr << "Error: Key generation failed.\n";
         return 1;
     }
 
     write_binary_file(out_file, private_key_out, private_key_out_size);
     return 0;
+}
+
+void setup_genpkey_parser(argparse::ArgumentParser &genpkey_cmd) {
+    std::string algorithms;
+    for (const auto &valid_algorithm: supported_cert_algorithms) {
+        if (!algorithms.empty()) {
+            algorithms += ", ";
+        }
+        algorithms += valid_algorithm.first;
+    }
+
+    genpkey_cmd.add_argument("-algorithm")
+            .required()
+            .help("The public key algorithm (" + algorithms + ")");
+
+    genpkey_cmd.add_argument("-out")
+            .required()
+            .help("Output file");
 }

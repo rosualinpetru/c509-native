@@ -1,9 +1,8 @@
 add_executable(c509_cli
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/file/file_util.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/genpkey.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/req.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cli.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/handle_genpkey.cpp
-
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/file/file_util.hpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/parser/parser.hpp
 )
 
 
@@ -18,8 +17,5 @@ target_include_directories(c509_cli
 target_link_libraries(c509_cli
         PRIVATE
         argparse
-        c509_structures
-        c509_codec
-        c509_crypto
         c509_core
 )

@@ -1,47 +1,32 @@
 #ifndef C509_CORE_H
 #define C509_CORE_H
 
-#include <string>
-#include <optional>
-#include <unordered_map>
-#include <vector>
+#include <map>
+
+#include "registry.hpp"
+
+#define MAX_BUFFER_SIZE 16384
 
 #include "c509_types/types.hpp"
 
-namespace C509 {
-    static const std::unordered_map<std::string, std::vector<uint32_t> > valid_algorithms = {
-        {"mldsa44", {2, 16, 840, 1, 101, 3, 4, 3, 17}},
-        {"mldsa65", {2, 16, 840, 1, 101, 3, 4, 3, 18}},
-        {"mldsa87", {2, 16, 840, 1, 101, 3, 4, 3, 19}},
-        {"mldsa44_ed25519", {2, 16, 840, 1, 114027, 80, 8, 1, 3}},
-        {"mldsa44_p256", {2, 16, 840, 1, 114027, 80, 8, 1, 4}},
-        {"mldsa65_ed25519", {2, 16, 840, 1, 114027, 80, 8, 1, 10}},
-        {"mldsa65_p256", {2, 16, 840, 1, 114027, 80, 8, 1, 8}},
-        {"mldsa65_bp256", {2, 16, 840, 1, 114027, 80, 8, 1, 9}},
-        {"mldsa87_ed448", {2, 16, 840, 1, 114027, 80, 8, 1, 13}},
-        {"mldsa87_p384", {2, 16, 840, 1, 114027, 80, 8, 1, 11}},
-        {"mldsa87_bp384", {2, 16, 840, 1, 114027, 80, 8, 1, 12}}
-    };
+bool map_alg_to_id(const std::string &algorithm, C509::AlgorithmIdentifier &identifier);
 
-    bool map_algid_to_oid(const std::string &algorithm, AlgorithmIdentifier &identifier);
+bool map_id_to_alg(std::string &algorithm, const C509::AlgorithmIdentifier &identifier);
 
-    bool keygen(const std::string &algorithm, uint8_t *private_key_out, size_t &private_key_out_size);
+bool keygen(const std::string &algorithm, uint8_t *private_key_out, size_t &private_key_out_size);
 
-    bool generate_csr(
-        const std::string &algorithm,
-        const std::string &country,
-        const std::string &state,
-        const std::string &locality,
-        const std::string &org,
-        const std::string &orgUnit,
-        const std::string &commonName,
-        const std::string &emailAddress,
-        const std::optional<std::string> &challengePassword,
+bool gen_csr(const uint8_t *private_key, size_t private_key_size,
+             std::map<uint32_t, std::string> &subject_attributes,
+             std::map<std::vector<uint32_t>, std::tuple<bool, std::string> > &extensions,
+             uint8_t *csr_out, size_t &csr_out_size);
 
-        uint8_t *csr_out,
-        size_t &csr_out_size,
-        uint8_t *private_key_out,
-        size_t &private_key_out_size);
-}
+bool verify_csr(const uint8_t *csr, size_t csr_size);
+
+bool sign_csr(const uint8_t *csr, size_t csr_size, const uint8_t *private_key, size_t private_key_size,
+              const uint8_t *ca_cert, size_t ca_cert_size, uint32_t days, uint64_t serial_number,
+              uint8_t *cert_out, size_t &cert_out_size);
+
+bool self_sign_csr(const uint8_t *csr, size_t csr_size, const uint8_t *private_key, size_t private_key_size,
+                   uint32_t days, uint64_t serial_number, uint8_t *cert_out, size_t &cert_out_size);
 
 #endif // C509_CORE_H

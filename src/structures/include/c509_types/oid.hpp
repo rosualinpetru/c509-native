@@ -12,6 +12,10 @@ namespace C509 {
     struct OID {
         bounded_array<uint32_t, MAX_OID_SUBIDS> subids;
 
+        constexpr OID(const uint32_t *data, const size_t size) {
+            subids.copy(data, size);
+        }
+
         constexpr bool operator==(const OID &other) const {
             if (subids.size() != other.subids.size()) return false;
             for (size_t i = 0; i < subids.size(); ++i)

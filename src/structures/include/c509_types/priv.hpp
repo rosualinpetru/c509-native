@@ -16,6 +16,8 @@ namespace C509 {
     struct C509PrivateKey {
         AlgorithmIdentifier subject_private_key_algorithm;
         bounded_array<uint8_t, MAX_PRIV_KEY_BYTES> subject_private_key;
+        bounded_array<uint8_t, MAX_PRIV_KEY_BYTES> subject_public_key;
+        // TODO: for ease of implementation in `core`, the public key is also stored because derivation does not occur
     };
 }
 

@@ -12,6 +12,8 @@ namespace C509 {
     struct OID {
         bounded_array<uint32_t, MAX_OID_SUBIDS> subids;
 
+        constexpr OID() = default;
+
         constexpr OID(const uint32_t *data, const size_t size) {
             subids.copy(data, size);
         }

@@ -19,13 +19,13 @@ bool CBORCodec<Name>::encode(zcbor_state_t *state, const Name &input) {
 
             return true;
 
-        case Name::Type::TEXT:
+        case Name::Type::Text:
             if (!zcbor_tstr_encode_ptr(state, reinterpret_cast<const char *>(input.raw.data()), input.raw.size()))
                 ZCBOR_ERR(C509_ERR_NAME_ENC_TSTR);
 
             return true;
 
-        case Name::Type::BYTES:
+        case Name::Type::Bytes:
             if (!zcbor_bstr_encode_ptr(state, reinterpret_cast<const char *>(input.raw.data()), input.raw.size()))
                 ZCBOR_ERR(C509_ERR_NAME_ENC_BSTR);
 
@@ -45,7 +45,7 @@ bool CBORCodec<Name>::decode(zcbor_state_t *state, Name &output) {
         if (!output.raw.copy(str.value, str.len))
             ZCBOR_ERR(C509_ERR_NAME_DEC_BUFFER_ERROR);
 
-        output.type = Name::Type::BYTES;
+        output.type = Name::Type::Bytes;
         return true;
     }
 
@@ -56,7 +56,7 @@ bool CBORCodec<Name>::decode(zcbor_state_t *state, Name &output) {
         if (!output.raw.copy(str.value, str.len))
             ZCBOR_ERR(C509_ERR_NAME_DEC_BUFFER_ERROR);
 
-        output.type = Name::Type::TEXT;
+        output.type = Name::Type::Text;
         return true;
     }
 

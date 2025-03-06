@@ -7,13 +7,12 @@
 
 #include "oid.hpp"
 
-#define MAX_ATTRIBUTE_VALUE_TSTR_BYTES 128 // TODO
-#define MAX_ATTRIBUTE_VALUE_BSTR_BYTES 128 // TODO
+#define MAX_ATTRIBUTE_VALUE_TSTR_BYTES 64 // TODO
+#define MAX_ATTRIBUTE_VALUE_BSTR_BYTES 64 // TODO
 
 namespace C509 {
     struct Attribute {
         enum class Type {
-            Unset,
             Int,
             OID
         } type{};

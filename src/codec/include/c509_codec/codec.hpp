@@ -8,6 +8,7 @@
     int cbor_decode(const uint8_t *payload, size_t payload_len, Type *result, size_t *payload_len_out);
 
 namespace C509 {
+    DECLARE_CODEC(TBSCertificate)
     DECLARE_CODEC(C509Certificate)
     DECLARE_CODEC(C509PrivateKey)
 

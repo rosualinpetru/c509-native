@@ -78,6 +78,8 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
             return 1;
 
         gen_csr(private_key, private_key_size, subject, extensions, csr_buffer, csr_buffer_size);
+        if (!c509)
+            write_binary_file(out.value(), csr_buffer, csr_buffer_size);
     } else {
         // --- Process Existing CSR (Verification or Other Operations) ---
         if (in.has_value()) {
@@ -102,9 +104,12 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
 
     // CSR present; private key is present only if new
 
-    if (!c509) {
-        write_binary_file(out.value(), csr_buffer, csr_buffer_size);
-    } else {
+    if (c509) {
+        if (!out.has_value()) {
+            std::cerr << "Error: -out is required.\n";
+            return 1;
+        }
+
         // --- Get days and serial ---
         if (!serial_number.has_value()) {
             std::cerr << "Error: -set_serial is required when generating a certificate.\n";
@@ -129,19 +134,21 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
             //     return 1;
             // }
         } else {
-            // if (!key) {
-            //     std::cerr << "Error: -key is required when generating a new CSR or certificate.\n";
-            //     return 1;
-            // }
-            //
-            // read_binary_file(key.value(), private_key, private_key_size);
-            // Self-Signed Certificate
-            // if (!self_sign_csr(csr_buffer, csr_buffer_size, private_key, private_key_size, days,
-            //                    serial_number.value(), cert_out, cert_out_size)) {
-            //     std::cerr << "Error: Self-signed certificate generation failed.\n";
-            //     return 1;
-            // }
+            if (!key) {
+                std::cerr << "Error: -key is required when generating a new CSR or certificate.\n";
+                return 1;
+            }
+
+            read_binary_file(key.value(), private_key, private_key_size);
+
+            if (!self_sign_csr(csr_buffer, csr_buffer_size, private_key, private_key_size, days,
+                               serial_number.value(), cert_out, cert_out_size)) {
+                std::cerr << "Error: Self-signed certificate generation failed.\n";
+                return 1;
+            }
         }
+
+        write_binary_file(out.value(), cert_out, cert_out_size);
     }
 
     return 0;

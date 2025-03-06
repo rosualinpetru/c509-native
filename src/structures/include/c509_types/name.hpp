@@ -8,20 +8,23 @@
 #include "attr.hpp"
 
 #define MAX_NAME_ATTRIBUTES 64 // TODO
-#define MAX_NAME_RAW 512 // TODO
+#define MAX_NAME_RAW 64 // TODO
 
 namespace C509 {
     struct Name {
         enum class Type {
             Attributes,
-            TEXT,
-            BYTES
-        } type;
+            Text,
+            Bytes
+        } type{};
 
         union {
             bounded_array<Attribute, MAX_NAME_ATTRIBUTES> attributes;
             bounded_array<uint8_t, MAX_NAME_RAW> raw;
         };
+
+        constexpr Name() : type(Type::Attributes) {
+        }
     };
 }
 

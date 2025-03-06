@@ -50,7 +50,7 @@ TEST_CASE("Name Encoding - Attributes Type") {
 TEST_CASE("Name Encoding - Text Type") {
     // Input
     Name name{};
-    name.type = Name::Type::TEXT;
+    name.type = Name::Type::Text;
     const auto text = "Test Name";
     name.raw.copy(reinterpret_cast<const uint8_t *>(text), strlen(text));
 
@@ -77,7 +77,7 @@ TEST_CASE("Name Encoding - Text Type") {
 TEST_CASE("Name Encoding - Bytes Type") {
     // Input
     Name name{};
-    name.type = Name::Type::BYTES;
+    name.type = Name::Type::Bytes;
     name.raw.copy({0xab, 0xcd, 0xef});
 
     // Output
@@ -134,7 +134,7 @@ TEST_CASE("Name Decoding - Text Type") {
 
     // Assertions
     REQUIRE(res == ZCBOR_SUCCESS);
-    REQUIRE(name.type == Name::Type::TEXT);
+    REQUIRE(name.type == Name::Type::Text);
     REQUIRE(strncmp(reinterpret_cast<const char *>(name.raw.data()), "Test Name", name.raw.size()) == 0);
 }
 
@@ -151,7 +151,7 @@ TEST_CASE("Name Decoding - Bytes Type") {
 
     // Assertions
     REQUIRE(res == ZCBOR_SUCCESS);
-    REQUIRE(name.type == Name::Type::BYTES);
+    REQUIRE(name.type == Name::Type::Bytes);
     REQUIRE(name.raw.size() == 3);
     REQUIRE(name.raw[0] == 0xAB);
     REQUIRE(name.raw[1] == 0xCD);

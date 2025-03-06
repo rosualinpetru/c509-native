@@ -5,7 +5,7 @@
 
 template<typename T, size_t N>
 class bounded_array {
-    T elements[N];
+    T elements[N]{};
     size_t len = 0;
 
 public:

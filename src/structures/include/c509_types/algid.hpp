@@ -4,7 +4,7 @@
 #include "structures.hpp"
 #include "oid.hpp"
 
-#define MAX_ALGORITHM_IDENTIFIER_PARAMETER_BYTES 128 // TODO
+#define MAX_ALGORITHM_IDENTIFIER_PARAMETER_BYTES 64 // TODO
 
 namespace C509 {
     struct AlgorithmIdentifier {

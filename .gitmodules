@@ -1,3 +1,6 @@
 [submodule "external/zcbor"]
 	path = external/zcbor
 	url = https://github.com/NordicSemiconductor/zcbor
+[submodule "external/cose_cbor_certificates"]
+	path = external/cose_cbor_certificates
+	url = https://github.com/cose-wg/CBOR-certificates.git

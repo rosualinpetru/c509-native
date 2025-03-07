@@ -13,7 +13,7 @@ namespace C509::CSR {
         AlgorithmIdentifier subject_signature_algorithm;
         Name subject;
         AlgorithmIdentifier subject_public_key_algorithm;
-        SubjectPublicKey subject_public_key;
+        PublicKey subject_public_key;
         Extensions extensions_request;
     };
 

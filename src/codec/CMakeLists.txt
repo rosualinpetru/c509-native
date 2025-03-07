@@ -13,6 +13,7 @@ add_library(c509_codec STATIC
         ${CMAKE_CURRENT_SOURCE_DIR}/src/csr_codec.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/crl_codec.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/priv_codec.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/cose_c509_codec.cpp
 )
 
 target_include_directories(c509_codec

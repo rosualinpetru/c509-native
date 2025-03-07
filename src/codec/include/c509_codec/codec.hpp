@@ -11,6 +11,8 @@ namespace C509 {
     DECLARE_CODEC(TBSCertificate)
     DECLARE_CODEC(C509Certificate)
     DECLARE_CODEC(C509PrivateKey)
+    DECLARE_CODEC(C509PEM)
+    DECLARE_CODEC(COSE_C509)
 
     namespace CSR {
         DECLARE_CODEC(TBSCertificateRequest)

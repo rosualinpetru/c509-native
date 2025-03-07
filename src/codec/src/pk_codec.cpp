@@ -2,14 +2,14 @@
 
 using namespace C509;
 
-bool CBORCodec<SubjectPublicKey>::encode(zcbor_state_t *state, const SubjectPublicKey &input) {
+bool CBORCodec<PublicKey>::encode(zcbor_state_t *state, const PublicKey &input) {
     if (!zcbor_bstr_encode_ptr(state, reinterpret_cast<const char *>(input.bytes.data()), input.bytes.size()))
         ZCBOR_ERR(C509_ERR_PK_ENC_BSTR);
 
     return true;
 }
 
-bool CBORCodec<SubjectPublicKey>::decode(zcbor_state_t *state, SubjectPublicKey &output) {
+bool CBORCodec<PublicKey>::decode(zcbor_state_t *state, PublicKey &output) {
     zcbor_string str{};
 
     if (!zcbor_bstr_decode(state, &str))

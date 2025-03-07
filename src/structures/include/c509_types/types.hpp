@@ -5,5 +5,6 @@
 #include "csr.hpp"
 #include "crl.hpp"
 #include "priv.hpp"
+#include "c509.hpp"
 
 #endif // C509_TYPES_H

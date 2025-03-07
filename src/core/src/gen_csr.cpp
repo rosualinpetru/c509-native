@@ -44,10 +44,12 @@ bool gen_csr(const uint8_t *private_key, size_t private_key_size,
 
     EVP_PKEY *key = nullptr;
     OSSL_PARAM params[] = {
-        OSSL_PARAM_construct_octet_string(OSSL_PKEY_PARAM_PRIV_KEY, c509_private_key.subject_private_key.data_p(),
-                                          c509_private_key.subject_private_key.size()),
-        OSSL_PARAM_construct_octet_string(OSSL_PKEY_PARAM_PUB_KEY, c509_private_key.subject_public_key.data_p(),
-                                  c509_private_key.subject_public_key.size()),
+        OSSL_PARAM_construct_octet_string(
+            OSSL_PKEY_PARAM_PRIV_KEY, c509_private_key.subject_private_key_info.private_key.bytes.data_p(),
+            c509_private_key.subject_private_key_info.private_key.bytes.size()),
+        OSSL_PARAM_construct_octet_string(
+            OSSL_PKEY_PARAM_PUB_KEY, c509_private_key.subject_private_key_info.public_key.bytes.data_p(),
+            c509_private_key.subject_private_key_info.public_key.bytes.size()),
         OSSL_PARAM_construct_end()
     };
 

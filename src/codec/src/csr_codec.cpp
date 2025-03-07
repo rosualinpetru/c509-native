@@ -16,7 +16,7 @@ bool CSR::CBORCodec<TBSCertificateRequest>::encode(zcbor_state_t *state, const T
     if (!C509::CBORCodec<AlgorithmIdentifier>::encode(state, input.subject_public_key_algorithm))
         ZCBOR_ERR(CSR_ERR_TBSCERTREQ_ENC_PUBKEY_ALG);
 
-    if (!C509::CBORCodec<SubjectPublicKey>::encode(state, input.subject_public_key))
+    if (!C509::CBORCodec<PublicKey>::encode(state, input.subject_public_key))
         ZCBOR_ERR(CSR_ERR_TBSCERTREQ_ENC_PUBKEY);
 
     if (!C509::CBORCodec<Extensions>::encode(state, input.extensions_request))
@@ -40,7 +40,7 @@ bool CSR::CBORCodec<TBSCertificateRequest>::decode(zcbor_state_t *state, TBSCert
     if (!C509::CBORCodec<AlgorithmIdentifier>::decode(state, output.subject_public_key_algorithm))
         ZCBOR_ERR(CSR_ERR_TBSCERTREQ_DEC_PUBKEY_ALG);
 
-    if (!C509::CBORCodec<SubjectPublicKey>::decode(state, output.subject_public_key))
+    if (!C509::CBORCodec<PublicKey>::decode(state, output.subject_public_key))
         ZCBOR_ERR(CSR_ERR_TBSCERTREQ_DEC_PUBKEY);
 
     if (!C509::CBORCodec<Extensions>::decode(state, output.extensions_request))

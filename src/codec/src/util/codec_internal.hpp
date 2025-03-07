@@ -31,37 +31,28 @@
 namespace C509 {
     DECLARE_CBOR_CODEC_TEMPLATE()
 
+    DECLARE_CBOR_CODEC(COSE_C509)
+    DECLARE_CBOR_CODEC(C509PEM)
     DECLARE_CBOR_CODEC(C509PrivateKey)
-
     DECLARE_CBOR_CODEC(C509Certificate)
-
     DECLARE_CBOR_CODEC(TBSCertificate)
-
     DECLARE_CBOR_CODEC(CertificateSerialNumber)
-
     DECLARE_CBOR_CODEC(AlgorithmIdentifier)
-
     DECLARE_CBOR_CODEC(Name)
-
     DECLARE_CBOR_CODEC(Attribute)
-
-    DECLARE_CBOR_CODEC(SubjectPublicKey)
-
+    DECLARE_CBOR_CODEC(PublicKey)
+    DECLARE_CBOR_CODEC(PrivateKey)
+    DECLARE_CBOR_CODEC(PrivateKeyInfo)
     DECLARE_CBOR_CODEC(SignatureValue)
-
     DECLARE_CBOR_CODEC_UNWRAPPED(OID)
-
     DECLARE_CBOR_CODEC_UNWRAPPED(Time)
-
     DECLARE_CBOR_CODEC(Extensions)
-
     DECLARE_CBOR_CODEC(Extension)
 
     namespace CSR {
         DECLARE_CBOR_CODEC_TEMPLATE()
 
         DECLARE_CBOR_CODEC(TBSCertificateRequest)
-
         DECLARE_CBOR_CODEC(C509CertificateRequest)
     }
 
@@ -69,9 +60,7 @@ namespace C509 {
         DECLARE_CBOR_CODEC_TEMPLATE()
 
         DECLARE_CBOR_CODEC(C509CertificateRevocationList)
-
         DECLARE_CBOR_CODEC(TBSCertificateRevocationList)
-
         DECLARE_CBOR_CODEC(RevokedCertificate)
     }
 }

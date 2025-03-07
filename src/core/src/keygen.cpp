@@ -44,18 +44,18 @@ bool keygen(const std::string &algorithm, uint8_t *private_key_out, size_t &priv
         return false;
     }
 
-    *private_key.subject_private_key.len_p() = private_key.subject_private_key.capacity();
-    if (EVP_PKEY_get_raw_private_key(key, private_key.subject_private_key.data_p(),
-                                     private_key.subject_private_key.len_p()) <= 0) {
+    C509::PrivateKey *priv_k = &private_key.subject_private_key_info.private_key;
+    *priv_k->bytes.len_p() = priv_k->bytes.capacity();
+    if (EVP_PKEY_get_raw_private_key(key, priv_k->bytes.data_p(), priv_k->bytes.len_p()) <= 0) {
         std::cerr << "Error: Failed to extract private key - might not fit buffer.\n";
         EVP_PKEY_CTX_free(pkey_ctx);
         OSSL_LIB_CTX_free(oqs_provider_ctx);
         return false;
     }
 
-    *private_key.subject_public_key.len_p() = private_key.subject_public_key.capacity();
-    if (EVP_PKEY_get_raw_public_key(key, private_key.subject_public_key.data_p(),
-                                     private_key.subject_public_key.len_p()) <= 0) {
+    C509::PublicKey *pk = &private_key.subject_private_key_info.public_key;
+    *pk->bytes.len_p() = pk->bytes.capacity();
+    if (EVP_PKEY_get_raw_public_key(key, pk->bytes.data_p(), pk->bytes.len_p()) <= 0) {
         std::cerr << "Error: Failed to extract private key - might not fit buffer.\n";
         EVP_PKEY_CTX_free(pkey_ctx);
         OSSL_LIB_CTX_free(oqs_provider_ctx);

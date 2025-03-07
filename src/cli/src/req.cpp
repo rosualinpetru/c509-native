@@ -116,23 +116,28 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
             return 1;
         }
 
+        if (!is_new && !verify) {
+            std::cerr << "Error: Please set the -verify flag to verify the CSR first.\n";
+            return 1;
+        }
+
         uint8_t cert_out[MAX_BUFFER_SIZE] = {};
         size_t cert_out_size = sizeof(cert_out);
 
         if (ca_cert.has_value() && ca_key.has_value()) {
-            // CA Signed Certificate
 
             uint8_t ca_cert_buffer[MAX_BUFFER_SIZE] = {};
             size_t ca_cert_size = sizeof(ca_cert_buffer);
 
+            read_binary_file(ca_cert.value(), ca_cert_buffer, ca_cert_size);
             read_binary_file(ca_key.value(), private_key, private_key_size);
 
-            // if (!sign_csr(csr_buffer, csr_buffer_size, private_key, private_key_size, ca_cert_buffer, ca_cert_size,
-            //               days,
-            //               serial_number.value(), cert_out, cert_out_size)) {
-            //     std::cerr << "Error: CA signing failed.\n";
-            //     return 1;
-            // }
+            if (!sign_csr(csr_buffer, csr_buffer_size, private_key, private_key_size, ca_cert_buffer, ca_cert_size,
+                          days,
+                          serial_number.value(), cert_out, cert_out_size)) {
+                std::cerr << "Error: CA signing failed.\n";
+                return 1;
+            }
         } else {
             if (!key) {
                 std::cerr << "Error: -key is required when generating a new CSR or certificate.\n";

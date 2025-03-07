@@ -21,7 +21,7 @@ namespace C509 {
         optional<Time> validity_not_after;
         Name subject;
         AlgorithmIdentifier subject_public_key_algorithm;
-        SubjectPublicKey subject_public_key;
+        PublicKey subject_public_key;
         Extensions extensions;
     };
 

@@ -5,11 +5,13 @@
 
 #define GENPKEY_CMD "genpkey"
 #define REQ_CMD "req"
+#define C509_CMD "c509"
 #define CRL_CMD "crl"
 
 enum class Command {
     GENPKEY,
     REQ,
+    C509,
     CRL,
     UNKNOWN
 };

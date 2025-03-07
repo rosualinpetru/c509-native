@@ -1,6 +1,7 @@
 #!/bin/bash
 
-cd "$(dirname "$0")" || exit 1
+SCRIPT_DIR="$(cd -- "$(dirname "$0")" >/dev/null 2>&1 && pwd -P)"
+cd $SCRIPT_DIR
 
 breakpoint() {
   echo -e "\n(Breakpoint... ⏳)"
@@ -60,22 +61,27 @@ continue_demo
 
 echo -e "✅ The oven is heating up! Stay tuned for the next step..."
 
-mkdir -p build
-run_command "cmake -DENABLE_GEN_ZCBOR_CODEC=ON -B ./build"
-cd build
-cmake ..
-make
-cd ..
+#mkdir -p build
+#run_command "cmake -DENABLE_GEN_ZCBOR_CODEC=ON -B ./build"
+#cd build
+#cmake ..
+#make
+#cd ..
 
 # Setup
-cd ./build/src/cli
+cd $SCRIPT_DIR/build/src/cli
 rm -rf ./ca
 mkdir -p ./ca
 rm -rf ./client
 mkdir -p ./client
 
 echo -e "\n🔢 Some libraries (like ZCBOR) offer (limited) support for parser generation based on CDDL schemas."
-echo -e "⚙️ Before going further, look into the ./build/gen for the ZCBOR generated codecs for C509."
+
+breakpoint
+
+cat $SCRIPT_DIR/resource/c509.cddl.raw
+
+echo -e "\n\n⚙️ Before going further, look into the ./build/gen for the ZCBOR generated codecs for C509."
 
 continue_demo
 
@@ -136,6 +142,19 @@ run_command "./c509_cli req -c509 -set_serial 2 -in ./client/client_csr.bin -ver
 run_command "ls -l ./client"
 
 echo -e "\n🔍 Let's look at the client files in more detail - going to cbor.me."
+
+continue_demo
+
+print_box "☑️ We also have tests" -2
+print_hr
+
+cd $SCRIPT_DIR/build/test/
+
+breakpoint
+
+run_command "./c509_tests"
+
+echo -e "\n🚀 Tests were really executed. They mostly focus on correct encoding and decoding of frequently used structures."
 
 continue_demo
 

@@ -2,6 +2,8 @@ add_executable(c509_cli
         ${CMAKE_CURRENT_SOURCE_DIR}/src/file/file_util.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/genpkey.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/req.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/bundle.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/crl.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cli.cpp
 )
 

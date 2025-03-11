@@ -38,8 +38,6 @@ void write_binary_file(const std::string &filename, const uint8_t *data, const s
         file.write(reinterpret_cast<const char *>(data), size);
     }
 
-
-    file.write(reinterpret_cast<const char *>(data), size);
     file.close();
 }
 
@@ -64,18 +62,21 @@ void read_binary_file(const std::string &filename, uint8_t *buffer, size_t &size
 
     if (compressed) {
         size_t decompressed_size = size;
-        if (BrotliDecoderDecompress(file_size, temp_buffer.data(), &decompressed_size, buffer) !=
+        if (BrotliDecoderDecompress(file_size, temp_buffer.data(), &decompressed_size, buffer) ==
             BROTLI_DECODER_RESULT_SUCCESS) {
-            std::cerr << "Error: Brotli decompression failed.\n";
-            exit(-2);
+            size = decompressed_size;
+        } else {
+            std::memcpy(buffer, temp_buffer.data(), file_size);
+            size = static_cast<size_t>(file_size);
         }
-        size = decompressed_size;
     } else {
         if (file_size > static_cast<std::streamsize>(size)) {
-            std::cerr << "Error: File too large, max allowed size is " << size << " bytes.\n";
+            std::cerr << "Error: File too large (" << file_size << " bytes), max allowed size is " << size <<
+                    " bytes.\n";
             exit(-2);
         }
         std::memcpy(buffer, temp_buffer.data(), file_size);
         size = static_cast<size_t>(file_size);
     }
 }
+

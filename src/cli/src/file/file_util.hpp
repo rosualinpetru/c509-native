@@ -27,7 +27,7 @@ void write_binary_file(const std::string &filename, const uint8_t *data, size_t 
  * @brief Reads a binary file into a buffer.
  *
  * This function reads the contents of a binary file and stores it in the provided buffer.
- * Optionally, if the file content is compressed, it decompresses the data using Brotli compression
+ * Optionally, if the file content is compressed, it tries to decompresses the data using Brotli compression
  * before storing it in the buffer.
  *
  * @param filename The name of the file to read.

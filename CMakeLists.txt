@@ -49,7 +49,7 @@ add_git_submodule(${EXTERNAL_DIR}/zcbor)
 find_package(OpenSSL 3.0 REQUIRED)
 
 # liboqs 
-set(OQS_BUILD_ONLY_LIB ON)
+set(OQS_BUILD_ONLY_LIB ON CACHE BOOL "" FORCE)
 set(OQS_MINIMAL_BUILD "SIG_ml_dsa_44;SIG_ml_dsa_65;SIG_ml_dsa_87")
 # set(OQS_EMBEDDED_BUILD ON)
 FetchContent_Declare(

@@ -61,12 +61,17 @@ continue_demo
 
 echo -e "✅ The oven is heating up! Stay tuned for the next step..."
 
-mkdir -p build
-run_command "cmake -DENABLE_GEN_ZCBOR_CODEC=ON -B ./build"
-cd build
-cmake ..
-make
-cd ..
+
+if [[ "$*" == *"--no-build"* ]]; then
+  echo -e "\n⚠️  Skipping build step due to '--no-build' flag."
+else
+  mkdir -p build
+  run_command "cmake -DENABLE_GEN_ZCBOR_CODEC=ON -B ./build"
+  cd build
+  cmake ..
+  make
+  cd ..
+fi
 
 # Setup
 cd $SCRIPT_DIR/build/src/cli
@@ -118,6 +123,9 @@ run_command "./c509_cli req"
 breakpoint
 
 run_command "./c509_cli req -new -c509 -set_serial 1 -days 7300 -key ./ca/ca_key.bin -out ./ca/ca_cert.bin"
+
+breakpoint
+
 run_command "ls -l ./ca"
 
 echo -e "\n🧐 Let's look at the CA files in more detail - going to cbor.me."
@@ -139,11 +147,33 @@ run_command "./c509_cli req -new -subj \"/C=RO/ST=Timis/L=Timisoara/O=UPT/OU=CS/
 breakpoint
 
 run_command "./c509_cli req -c509 -set_serial 2 -in ./client/client_csr.bin -verify -CA ./ca/ca_cert.bin -CAkey ./ca/ca_key.bin -out ./client/client_cert.bin"
-run_command "./c509_cli req -c509 -set_serial 2 -in ./client/client_csr.bin -verify -CA ./ca/ca_cert.bin -CAkey ./ca/ca_key.bin -compressed -out ./client/client_cert_compressed.bin"
+
+breakpoint
 
 run_command "ls -l ./client"
 
 echo -e "\n🔍 Let's look at the client files in more detail - going to cbor.me."
+
+continue_demo
+
+print_box "🛍️ Certificate Bundle" -1
+print_subsection "Create a bundle with the CA and client certificate"
+
+breakpoint
+
+run_command "./c509_cli bundle"
+
+breakpoint
+
+run_command "./c509_cli bundle  -out ./client/bundle.bin -in ./ca/ca_cert.bin ./client/client_cert.bin"
+
+breakpoint
+
+run_command "./c509_cli bundle -out ./client/bundle.compressed.bin -compressed -in ./ca/ca_cert.bin ./client/client_cert.bin"
+
+breakpoint
+
+run_command "ls -l ./client"
 
 continue_demo
 

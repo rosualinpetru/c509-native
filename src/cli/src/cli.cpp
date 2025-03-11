@@ -9,6 +9,7 @@ inline Command get_command(const argparse::ArgumentParser &program) {
         if (program.is_subcommand_used(GENPKEY_CMD)) return Command::GENPKEY;
         if (program.is_subcommand_used(REQ_CMD)) return Command::REQ;
         if (program.is_subcommand_used(CRL_CMD)) return Command::CRL;
+        if (program.is_subcommand_used(BUNDLE_CMD)) return Command::BUNDLE;
     } catch (const std::exception &_) {
     }
     return Command::UNKNOWN;
@@ -21,13 +22,19 @@ int main(const int argc, char *argv[]) {
     // Create individual parsers for each command
     argparse::ArgumentParser genpkey_cmd(GENPKEY_CMD);
     setup_genpkey_parser(genpkey_cmd);
+    program.add_subparser(genpkey_cmd);
 
     argparse::ArgumentParser req_cmd(REQ_CMD);
     setup_req_parser(req_cmd);
-
-    // Register subcommands
-    program.add_subparser(genpkey_cmd);
     program.add_subparser(req_cmd);
+
+    argparse::ArgumentParser crl_cmd(CRL_CMD);
+    setup_crl_parser(crl_cmd);
+    program.add_subparser(crl_cmd);
+
+    argparse::ArgumentParser bundle_cmd(BUNDLE_CMD);
+    setup_bundle_parser(bundle_cmd);
+    program.add_subparser(bundle_cmd);
 
     if (argc == 1) {
         std::cout << program;
@@ -43,6 +50,12 @@ int main(const int argc, char *argv[]) {
                 break;
             case Command::REQ:
                 std::cout << req_cmd;
+                break;
+            case Command::CRL:
+                std::cout << crl_cmd;
+                break;
+            case Command::BUNDLE:
+                std::cout << bundle_cmd;
                 break;
             case Command::UNKNOWN:
             default:
@@ -63,8 +76,13 @@ int main(const int argc, char *argv[]) {
             }
             return handle_req(req_cmd);
         case Command::CRL:
-            std::cerr << "Error: command is not implemented yet.\n";
-            return 1;
+            if (argc == 2) {
+                std::cout << crl_cmd;
+                return 0;
+            }
+            return handle_crl(crl_cmd);
+        case Command::BUNDLE:
+            return handle_bundle(bundle_cmd);
         case Command::UNKNOWN:
         default:
             return 1;

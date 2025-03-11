@@ -39,7 +39,7 @@
 namespace C509 {
     ZCBOR_ENTRY_CODEC_IMPL(COSE_C509, ZCBOR_STATES_COSE_C509)
 
-    ZCBOR_ENTRY_CODEC_IMPL(TBSCertificate, ZCBOR_STATES_CSR)
+    ZCBOR_ENTRY_CODEC_IMPL(TBSCertificate, ZCBOR_STATES_CERT)
 
     ZCBOR_ENTRY_CODEC_IMPL(C509Certificate, ZCBOR_STATES_CERT)
 
@@ -55,5 +55,7 @@ namespace C509 {
 
     namespace CRL {
         ZCBOR_ENTRY_CODEC_IMPL(C509CertificateRevocationList, ZCBOR_STATES_CRL)
+
+        ZCBOR_ENTRY_CODEC_IMPL(TBSCertificateRevocationList, ZCBOR_STATES_CRL)
     }
 }

@@ -18,7 +18,7 @@ int handle_genpkey(const argparse::ArgumentParser &genpkey_cmd) {
     uint8_t private_key_out[MAX_BUFFER_SIZE] = {};
     size_t private_key_out_size = sizeof(private_key_out);
 
-    if (!keygen(algorithm, private_key_out, private_key_out_size)) {
+    if (!key_gen(algorithm, private_key_out, private_key_out_size)) {
         std::cerr << "Error: Key generation failed.\n";
         return 1;
     }

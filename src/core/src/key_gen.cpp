@@ -6,7 +6,7 @@
 #include "c509_types/types.hpp"
 #include "c509_codec/codec.hpp"
 
-bool keygen(const std::string &algorithm, uint8_t *private_key_out, size_t &private_key_out_size) {
+bool key_gen(const std::string &algorithm, uint8_t *private_key_out, size_t &private_key_out_size) {
     OSSL_LIB_CTX *oqs_provider_ctx = load_oqs_provider();
     if (!oqs_provider_ctx) {
         std::cerr << "Error: Failed to load OQS provider.\n";

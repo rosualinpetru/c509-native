@@ -4,7 +4,7 @@
 #include "c509_crypto/crypto.hpp"
 #include "c509_codec/codec.hpp"
 
-bool verify_csr(const uint8_t *csr, const size_t csr_size) {
+bool csr_verify(const uint8_t *csr, const size_t csr_size) {
     if (!csr || csr_size == 0) {
         std::cerr << "Error: Invalid CSR input.\n";
         return false;

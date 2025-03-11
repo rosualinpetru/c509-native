@@ -1,8 +1,10 @@
 add_library(c509_core STATIC
-        src/gen_csr.cpp
-        src/keygen.cpp
-        src/verify_csr.cpp
-        src/sign_csr.cpp
+        src/key_gen.cpp
+        src/csr_gen.cpp
+        src/csr_verify.cpp
+        src/csr_sign.cpp
+        src/crl_gen.cpp
+        src/crl_revoke.cpp
         src/id_mapper.cpp
 )
 

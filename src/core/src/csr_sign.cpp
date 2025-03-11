@@ -12,13 +12,13 @@ bool sign_csr_impl(const uint8_t *csr, size_t csr_size, const uint8_t *private_k
                    C509::Name *issuer, uint32_t days, uint64_t serial_number,
                    uint8_t *cert_out, size_t &cert_out_size);
 
-bool self_sign_csr(const uint8_t *csr, const size_t csr_size, const uint8_t *private_key, const size_t private_key_size,
+bool csr_self_sign(const uint8_t *csr, const size_t csr_size, const uint8_t *private_key, const size_t private_key_size,
                    const uint32_t days, const uint64_t serial_number, uint8_t *cert_out, size_t &cert_out_size) {
     return sign_csr_impl(csr, csr_size, private_key, private_key_size, nullptr, days, serial_number, cert_out,
                          cert_out_size);
 }
 
-bool sign_csr(const uint8_t *csr, size_t csr_size, const uint8_t *private_key, size_t private_key_size,
+bool csr_sign(const uint8_t *csr, size_t csr_size, const uint8_t *private_key, size_t private_key_size,
               const uint8_t *ca_cert, size_t ca_cert_size, uint32_t days, uint64_t serial_number,
               uint8_t *cert_out, size_t &cert_out_size) {
     if (!ca_cert || ca_cert_size == 0) {
@@ -35,13 +35,6 @@ bool sign_csr(const uint8_t *csr, size_t csr_size, const uint8_t *private_key, s
     return sign_csr_impl(csr, csr_size, private_key, private_key_size, &c509_ca_cert.tbs_certificate.subject, days,
                          serial_number, cert_out,
                          cert_out_size);
-}
-
-void set_validity_period(C509::Time &not_before, C509::Time &not_after, const uint32_t days) {
-    const std::time_t current_time = std::time(nullptr);
-    not_before.epoch_seconds = static_cast<uint64_t>(current_time);
-    const std::time_t expiration_time = current_time + (days * 24 * 60 * 60);
-    not_after.epoch_seconds = static_cast<uint64_t>(expiration_time);
 }
 
 bool sign_csr_impl(const uint8_t *csr, size_t csr_size, const uint8_t *private_key, size_t private_key_size,
@@ -121,14 +114,16 @@ bool sign_csr_impl(const uint8_t *csr, size_t csr_size, const uint8_t *private_k
     tbs.subject_public_key_algorithm = request.tbs_certificate_request.subject_public_key_algorithm;
     tbs.issuer_signature_algorithm = request.tbs_certificate_request.subject_signature_algorithm;
     tbs.extensions = request.tbs_certificate_request.extensions_request;
-    set_validity_period(tbs.validity_not_before, tbs.validity_not_after.get(), days);
+    const std::time_t current_time = std::time(nullptr);
+    tbs.validity_not_before.epoch_seconds = static_cast<uint64_t>(std::time(nullptr));
+    tbs.validity_not_after.get().epoch_seconds = tbs.validity_not_before.epoch_seconds + (days * 24 * 60 * 60);
     tbs.validity_not_after.set_has();
 
     // Encode TBS certificate for signing
     uint8_t tbs_buffer[MAX_BUFFER_SIZE];
     size_t tbs_buffer_size;
     if (cbor_encode(tbs_buffer, MAX_BUFFER_SIZE, &tbs, &tbs_buffer_size) != 0) {
-        std::cerr << "Failed to encode TBSCertificate.\n";
+        std::cerr << "Error: Failed to encode TBSCertificate.\n";
         EVP_PKEY_free(key);
         EVP_PKEY_CTX_free(pkey_ctx);
         OSSL_LIB_CTX_free(oqs_provider_ctx);
@@ -149,13 +144,13 @@ bool sign_csr_impl(const uint8_t *csr, size_t csr_size, const uint8_t *private_k
     *cert.signature_value.bytes.len_p() = cert.signature_value.bytes.capacity();
     if (EVP_PKEY_sign(sign_ctx, cert.signature_value.bytes.data_p(),
                       cert.signature_value.bytes.len_p(), tbs_buffer, tbs_buffer_size) <= 0) {
-        std::cerr << "Failed to sign TBSCertificate.\n";
+        std::cerr << "Error: Failed to sign TBSCertificate.\n";
         return false;
     }
 
     // Encode the self-signed certificate
     if (cbor_encode(cert_out, cert_out_size, &cert, &cert_out_size) != 0) {
-        std::cerr << "Failed to encode C509Certificate.\n";
+        std::cerr << "Error: Failed to encode C509Certificate.\n";
         return false;
     }
 

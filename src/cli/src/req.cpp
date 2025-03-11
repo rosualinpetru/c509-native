@@ -78,7 +78,7 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
         if (!parse_subject(subject_raw, subject) || !parse_extensions(extensions_raw, extensions))
             return 1;
 
-        gen_csr(private_key, private_key_size, subject, extensions, csr_buffer, csr_buffer_size);
+        csr_gen(private_key, private_key_size, subject, extensions, csr_buffer, csr_buffer_size);
         if (!c509)
             write_binary_file(out.value(), csr_buffer, csr_buffer_size, compressed);
     } else {
@@ -87,7 +87,7 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
             read_binary_file(in.value(), csr_buffer, csr_buffer_size, compressed);
 
             if (verify) {
-                if (!verify_csr(csr_buffer, csr_buffer_size)) {
+                if (!csr_verify(csr_buffer, csr_buffer_size)) {
                     std::cerr << "Error: CSR verification failed.\n";
                     return 1;
                 }
@@ -132,7 +132,7 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
             read_binary_file(ca_cert.value(), ca_cert_buffer, ca_cert_size, compressed);
             read_binary_file(ca_key.value(), private_key, private_key_size, compressed);
 
-            if (!sign_csr(csr_buffer, csr_buffer_size, private_key, private_key_size, ca_cert_buffer, ca_cert_size,
+            if (!csr_sign(csr_buffer, csr_buffer_size, private_key, private_key_size, ca_cert_buffer, ca_cert_size,
                           days,
                           serial_number.value(), cert_out, cert_out_size)) {
                 std::cerr << "Error: CA signing failed.\n";
@@ -146,7 +146,7 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
 
             read_binary_file(key.value(), private_key, private_key_size, compressed);
 
-            if (!self_sign_csr(csr_buffer, csr_buffer_size, private_key, private_key_size, days,
+            if (!csr_self_sign(csr_buffer, csr_buffer_size, private_key, private_key_size, days,
                                serial_number.value(), cert_out, cert_out_size)) {
                 std::cerr << "Error: Self-signed certificate generation failed.\n";
                 return 1;
@@ -184,7 +184,7 @@ void setup_req_parser(argparse::ArgumentParser &req_cmd) {
             .help("Issuer cert to use for signing a cert, implies -c509");
 
     req_cmd.add_argument("-CAkey")
-            .help("Issuer private key to use with -CA; default is -CA arg");
+            .help("Issuer private key to use with -CA");
 
     req_cmd.add_argument("-subj")
             .help("Specify the subject (Distinguished Name) in OpenSSL format: "
@@ -217,9 +217,9 @@ void setup_req_parser(argparse::ArgumentParser &req_cmd) {
             .help("Do not ask anything during request generation");
 
     req_cmd.add_argument("-compressed")
-        .default_value(false)
-        .implicit_value(true)
-        .help("Use Brotli compression");
+            .default_value(false)
+            .implicit_value(true)
+            .help("Use Brotli compression");
 }
 
 std::string get_input(const std::string &field, const std::string &default_value) {

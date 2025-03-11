@@ -7,8 +7,8 @@
 
 #include "oid.hpp"
 
-#define MAX_EXTENSION_BYTES 256 // TODO
-#define MAX_EXTENSIONS_LIST_SIZE 64 // TODO
+#define MAX_EXTENSION_BYTES 128 // TODO
+#define MAX_EXTENSIONS_LIST_SIZE 32 // TODO
 
 namespace C509 {
     struct Extension {

@@ -63,8 +63,11 @@ bool CRL::CBORCodec<TBSCertificateRevocationList>::encode(zcbor_state_t *state,
 }
 
 bool CRL::CBORCodec<TBSCertificateRevocationList>::decode(zcbor_state_t *state, TBSCertificateRevocationList &output) {
-    if (!zcbor_uint32_expect(state, output.c509_certificate_revocation_list_type))
+    uint32_t int_value;
+    if (!zcbor_uint32_decode(state, &int_value))
         ZCBOR_ERR(CRL_ERR_TBSCERTREVLIST_DEC_TYPE);
+
+    output.c509_certificate_revocation_list_type = int_value;
 
     if (!C509::CBORCodec<Name>::decode(state, output.issuer))
         ZCBOR_ERR(CRL_ERR_TBSCERTREVLIST_DEC_ISSUER);
@@ -99,22 +102,16 @@ bool CRL::CBORCodec<TBSCertificateRevocationList>::decode(zcbor_state_t *state, 
 
 bool CRL::CBORCodec<C509CertificateRevocationList>::encode(zcbor_state_t *state,
                                                            const C509CertificateRevocationList &input) {
-    if (!CBORCodec<TBSCertificateRevocationList>::encode(state, input.tbs_certificate_revocation_list))
-        ZCBOR_ERR(CRL_ERR_CERTREVLIST_ENC_TBS);
-
-    if (!C509::CBORCodec<SignatureValue>::encode(state, input.issuer_signature_value))
-        ZCBOR_ERR(CRL_ERR_CERTREVLIST_ENC_SIG);
-
-    return true;
+    return zcbor_list_start_encode(state, 8) &&
+           CBORCodec<TBSCertificateRevocationList>::encode(state, input.tbs_certificate_revocation_list) &&
+           C509::CBORCodec<SignatureValue>::encode(state, input.issuer_signature_value) &&
+           zcbor_list_end_encode(state, 8);
 }
 
 bool CRL::CBORCodec<
     C509CertificateRevocationList>::decode(zcbor_state_t *state, C509CertificateRevocationList &output) {
-    if (!CBORCodec<TBSCertificateRevocationList>::decode(state, output.tbs_certificate_revocation_list))
-        ZCBOR_ERR(CRL_ERR_CERTREVLIST_DEC_TBS);
-
-    if (!C509::CBORCodec<SignatureValue>::decode(state, output.issuer_signature_value))
-        ZCBOR_ERR(CRL_ERR_CERTREVLIST_DEC_SIG);
-
-    return true;
+    return zcbor_list_start_decode(state) &&
+           CBORCodec<TBSCertificateRevocationList>::decode(state, output.tbs_certificate_revocation_list) &&
+           C509::CBORCodec<SignatureValue>::decode(state, output.issuer_signature_value) &&
+           zcbor_list_end_decode(state);
 }

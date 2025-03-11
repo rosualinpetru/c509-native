@@ -109,6 +109,9 @@ run_command "./c509_cli genpkey"
 breakpoint
 
 run_command "./c509_cli genpkey -algorithm mldsa87 -out ./ca/ca_key.bin"
+
+breakpoint
+
 run_command "ls -l ./ca"
 continue_demo
 
@@ -169,11 +172,33 @@ run_command "./c509_cli bundle  -out ./client/bundle.bin -in ./ca/ca_cert.bin ./
 
 breakpoint
 
-run_command "./c509_cli bundle -out ./client/bundle.compressed.bin -compressed -in ./ca/ca_cert.bin ./client/client_cert.bin"
+run_command "./c509_cli bundle -out ./client/bundle_compressed.bin -compressed -in ./ca/ca_cert.bin ./client/client_cert.bin"
 
 breakpoint
 
 run_command "ls -l ./client"
+
+continue_demo
+
+print_box "📝 Certificate Revocation Lists" -1
+print_subsection "Revoke an issued certificate (no real certificate database)"
+
+breakpoint
+
+run_command "./c509_cli crl"
+
+breakpoint
+
+run_command "./c509_cli crl -gencrl -cert ./ca/ca_cert.bin -keyfile ./ca/ca_key.bin -crldays 1 -out ./ca/crl.bin"
+
+breakpoint
+
+run_command "./c509_cli crl -incrl ./ca/crl.bin -revoke ./client/client_cert.bin -cert ./ca/ca_cert.bin -keyfile ./ca/ca_key.bin -crldays 1 -out ./ca/crl.updated.bin"
+run_command "./c509_cli crl -incrl ./ca/crl.bin -revoke ./client/client_cert.bin -cert ./ca/ca_cert.bin -keyfile ./ca/ca_key.bin -crldays 1 -out ./ca/crl_updated_compressed.bin -compressed"
+
+breakpoint
+
+run_command "ls -l ./ca"
 
 continue_demo
 

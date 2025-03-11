@@ -10,7 +10,7 @@
 #include "name.hpp"
 #include "sig.hpp"
 
-#define MAX_REVOKED_CERTIFICATES 4096 // TODO
+#define MAX_REVOKED_CERTIFICATES 32 // TODO
 
 namespace C509::CRL {
     struct RevokedCertificate {

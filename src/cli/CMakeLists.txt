@@ -18,4 +18,7 @@ target_link_libraries(c509_cli
         PRIVATE
         argparse
         c509_core
+        brotlienc
+        brotlidec
+        brotlicommon
 )

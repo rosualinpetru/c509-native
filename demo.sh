@@ -61,12 +61,12 @@ continue_demo
 
 echo -e "✅ The oven is heating up! Stay tuned for the next step..."
 
-#mkdir -p build
-#run_command "cmake -DENABLE_GEN_ZCBOR_CODEC=ON -B ./build"
-#cd build
-#cmake ..
-#make
-#cd ..
+mkdir -p build
+run_command "cmake -DENABLE_GEN_ZCBOR_CODEC=ON -B ./build"
+cd build
+cmake ..
+make
+cd ..
 
 # Setup
 cd $SCRIPT_DIR/build/src/cli
@@ -103,7 +103,7 @@ run_command "./c509_cli genpkey"
 
 breakpoint
 
-run_command "./c509_cli genpkey -algorithm mldsa87_bp384 -out ./ca/ca_key.bin"
+run_command "./c509_cli genpkey -algorithm mldsa87 -out ./ca/ca_key.bin"
 run_command "ls -l ./ca"
 continue_demo
 
@@ -139,6 +139,8 @@ run_command "./c509_cli req -new -subj \"/C=RO/ST=Timis/L=Timisoara/O=UPT/OU=CS/
 breakpoint
 
 run_command "./c509_cli req -c509 -set_serial 2 -in ./client/client_csr.bin -verify -CA ./ca/ca_cert.bin -CAkey ./ca/ca_key.bin -out ./client/client_cert.bin"
+run_command "./c509_cli req -c509 -set_serial 2 -in ./client/client_csr.bin -verify -CA ./ca/ca_cert.bin -CAkey ./ca/ca_key.bin -compressed -out ./client/client_cert_compressed.bin"
+
 run_command "ls -l ./client"
 
 echo -e "\n🔍 Let's look at the client files in more detail - going to cbor.me."

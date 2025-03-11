@@ -32,6 +32,8 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
     const auto out = req_cmd.present<std::string>("-out");
     const auto batch = req_cmd.get<bool>("-batch");
     const auto addext = req_cmd.present<std::vector<std::string> >("-addext");
+    const auto compressed = req_cmd.get<bool>("-compressed");
+    const auto in_compressed = req_cmd.get<bool>("-in-compressed");
 
     // Flags implications
     c509 = ca_cert.has_value() ? true : c509;
@@ -70,7 +72,7 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
 
         auto extensions_raw = addext.has_value() ? *addext : std::vector<std::string>();
 
-        read_binary_file(key.value(), private_key, private_key_size);
+        read_binary_file(key.value(), private_key, private_key_size, in_compressed);
 
         std::map<uint32_t, std::string> subject;
         std::map<std::vector<uint32_t>, std::tuple<bool, std::string> > extensions;
@@ -79,11 +81,11 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
 
         gen_csr(private_key, private_key_size, subject, extensions, csr_buffer, csr_buffer_size);
         if (!c509)
-            write_binary_file(out.value(), csr_buffer, csr_buffer_size);
+            write_binary_file(out.value(), csr_buffer, csr_buffer_size, compressed);
     } else {
         // --- Process Existing CSR (Verification or Other Operations) ---
         if (in.has_value()) {
-            read_binary_file(in.value(), csr_buffer, csr_buffer_size);
+            read_binary_file(in.value(), csr_buffer, csr_buffer_size, in_compressed);
 
             if (verify) {
                 if (!verify_csr(csr_buffer, csr_buffer_size)) {
@@ -125,12 +127,11 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
         size_t cert_out_size = sizeof(cert_out);
 
         if (ca_cert.has_value() && ca_key.has_value()) {
-
             uint8_t ca_cert_buffer[MAX_BUFFER_SIZE] = {};
             size_t ca_cert_size = sizeof(ca_cert_buffer);
 
-            read_binary_file(ca_cert.value(), ca_cert_buffer, ca_cert_size);
-            read_binary_file(ca_key.value(), private_key, private_key_size);
+            read_binary_file(ca_cert.value(), ca_cert_buffer, ca_cert_size, in_compressed);
+            read_binary_file(ca_key.value(), private_key, private_key_size, in_compressed);
 
             if (!sign_csr(csr_buffer, csr_buffer_size, private_key, private_key_size, ca_cert_buffer, ca_cert_size,
                           days,
@@ -144,7 +145,7 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
                 return 1;
             }
 
-            read_binary_file(key.value(), private_key, private_key_size);
+            read_binary_file(key.value(), private_key, private_key_size, in_compressed);
 
             if (!self_sign_csr(csr_buffer, csr_buffer_size, private_key, private_key_size, days,
                                serial_number.value(), cert_out, cert_out_size)) {
@@ -153,7 +154,7 @@ int handle_req(const argparse::ArgumentParser &req_cmd) {
             }
         }
 
-        write_binary_file(out.value(), cert_out, cert_out_size);
+        write_binary_file(out.value(), cert_out, cert_out_size, compressed);
     }
 
     return 0;
@@ -215,6 +216,16 @@ void setup_req_parser(argparse::ArgumentParser &req_cmd) {
             .default_value(false)
             .implicit_value(true)
             .help("Do not ask anything during request generation");
+
+    req_cmd.add_argument("-in-compressed")
+            .default_value(false)
+            .implicit_value(true)
+            .help("Use Brotli compression for input");
+
+    req_cmd.add_argument("-compressed")
+        .default_value(false)
+        .implicit_value(true)
+        .help("Use Brotli compression for output");
 }
 
 std::string get_input(const std::string &field, const std::string &default_value) {

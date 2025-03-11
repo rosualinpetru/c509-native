@@ -30,6 +30,16 @@ FetchContent_Declare(
         GIT_SHALLOW TRUE)
 FetchContent_MakeAvailable(argparse)
 
+set(BROTLI_BUNDLED_MODE ON CACHE BOOL "" FORCE)
+set(BROTLI_DISABLE_TESTS ON CACHE BOOL "" FORCE)
+FetchContent_Declare(
+        brotli
+        GIT_REPOSITORY https://github.com/google/brotli
+        GIT_TAG v1.1.0
+        GIT_SHALLOW TRUE)
+FetchContent_MakeAvailable(brotli)
+set(BUILD_SHARED_LIBS OFF)
+
 # zcbor 
 # add_compile_definitions(ZCBOR_VERBOSE=1) # useful for debugging
 add_compile_definitions(ZCBOR_CANONICAL=1)

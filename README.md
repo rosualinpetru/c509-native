@@ -43,6 +43,7 @@ make
 ## Running the Demo
 A demo script is included to guide users through key features:
 ```shell
+apt-get install toilet
 ./demo.sh
 ```
 

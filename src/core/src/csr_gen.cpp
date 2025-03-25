@@ -80,8 +80,8 @@ bool csr_gen(const uint8_t *private_key, size_t private_key_size,
         size_t index = 0;
         for (const auto &[type, value]: subject_attributes) {
             subject.attributes[index].type = C509::Attribute::Type::Int;
-            subject.attributes[index].intAttribute.attribute_type = type;
-            subject.attributes[index].intAttribute.attribute_value.copy(
+            subject.attributes[index].attribute_type.integer = type;
+            subject.attributes[index].attribute_value.copy(
                 reinterpret_cast<const unsigned char *>(value.data()), value.size());
             index++;
         }

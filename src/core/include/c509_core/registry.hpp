@@ -39,7 +39,7 @@ static const std::unordered_map<std::string, std::vector<uint32_t> > supported_c
     {"challengePassword", {1, 2, 840, 113549, 1, 9, 7}}
 };
 
-// TODO: Should be either OID or int based on registry, but only pq are considered
+// Only Hybrid ML_DSA with ECC is considered for now.
 static const std::unordered_map<std::string, std::vector<uint32_t> > supported_cert_algorithms = {
     {"mldsa44", {2, 16, 840, 1, 101, 3, 4, 3, 17}},
     {"mldsa65", {2, 16, 840, 1, 101, 3, 4, 3, 18}},

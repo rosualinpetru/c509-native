@@ -6,6 +6,8 @@
 namespace C509 {
     struct Time {
         uint64_t epoch_seconds;
+
+        std::string to_string() const;
     };
 }
 

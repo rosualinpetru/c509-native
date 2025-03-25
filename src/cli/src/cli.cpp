@@ -10,6 +10,7 @@ inline Command get_command(const argparse::ArgumentParser &program) {
         if (program.is_subcommand_used(REQ_CMD)) return Command::REQ;
         if (program.is_subcommand_used(CRL_CMD)) return Command::CRL;
         if (program.is_subcommand_used(BUNDLE_CMD)) return Command::BUNDLE;
+        if (program.is_subcommand_used(PARSE_CMD)) return Command::PARSE;
     } catch (const std::exception &_) {
     }
     return Command::UNKNOWN;
@@ -36,6 +37,10 @@ int main(const int argc, char *argv[]) {
     setup_bundle_parser(bundle_cmd);
     program.add_subparser(bundle_cmd);
 
+    argparse::ArgumentParser parse_cmd(PARSE_CMD);
+    setup_parse_parser(parse_cmd);
+    program.add_subparser(parse_cmd);
+
     if (argc == 1) {
         std::cout << program;
         return 1;
@@ -56,6 +61,9 @@ int main(const int argc, char *argv[]) {
                 break;
             case Command::BUNDLE:
                 std::cout << bundle_cmd;
+                break;
+            case Command::PARSE:
+                std::cout << parse_cmd;
                 break;
             case Command::UNKNOWN:
             default:
@@ -83,6 +91,8 @@ int main(const int argc, char *argv[]) {
             return handle_crl(crl_cmd);
         case Command::BUNDLE:
             return handle_bundle(bundle_cmd);
+        case Command::PARSE:
+            return handle_parse(parse_cmd);
         case Command::UNKNOWN:
         default:
             return 1;

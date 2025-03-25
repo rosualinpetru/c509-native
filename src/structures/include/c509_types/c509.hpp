@@ -10,6 +10,8 @@
 namespace C509 {
     struct COSE_C509 {
         bounded_array<C509Certificate, MAX_C509_BAG> certificates;
+
+        std::string to_string() const;
     };
 }
 

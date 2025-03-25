@@ -113,6 +113,11 @@ run_command "./c509_cli genpkey -algorithm mldsa87 -out ./ca/ca_key.bin"
 breakpoint
 
 run_command "ls -l ./ca"
+
+breakpoint
+
+run_command "./c509_cli parse -in ./ca/ca_key.bin"
+
 continue_demo
 
 print_box "📜 Certification Authority (CA)" -1
@@ -130,6 +135,10 @@ run_command "./c509_cli req -new -c509 -set_serial 1 -days 7300 -key ./ca/ca_key
 breakpoint
 
 run_command "ls -l ./ca"
+
+breakpoint
+
+run_command "./c509_cli parse -in ./ca/ca_cert.bin"
 
 echo -e "\n🧐 Let's look at the CA files in more detail - going to cbor.me."
 
@@ -149,11 +158,23 @@ run_command "./c509_cli req -new -subj \"/C=RO/ST=Timis/L=Timisoara/O=UPT/OU=CS/
 
 breakpoint
 
+run_command "ls -l ./client"
+
+breakpoint
+
+run_command "./c509_cli parse -in ./client/client_csr.bin"
+
+breakpoint
+
 run_command "./c509_cli req -c509 -set_serial 2 -in ./client/client_csr.bin -verify -CA ./ca/ca_cert.bin -CAkey ./ca/ca_key.bin -out ./client/client_cert.bin"
 
 breakpoint
 
 run_command "ls -l ./client"
+
+breakpoint
+
+run_command "./c509_cli parse -in ./client/client_cert.bin"
 
 echo -e "\n🔍 Let's look at the client files in more detail - going to cbor.me."
 
@@ -199,6 +220,10 @@ run_command "./c509_cli crl -incrl ./ca/crl.bin -revoke ./client/client_cert.bin
 breakpoint
 
 run_command "ls -l ./ca"
+
+breakpoint
+
+run_command "./c509_cli parse -in ./ca/crl.updated.bin"
 
 continue_demo
 

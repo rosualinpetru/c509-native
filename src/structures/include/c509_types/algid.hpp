@@ -4,7 +4,10 @@
 #include "structures.hpp"
 #include "oid.hpp"
 
-#define MAX_ALGORITHM_IDENTIFIER_PARAMETER_BYTES 64 // TODO
+// Considering only ML-DSA composite, parameters are needed only when combined with RSASSA-PSS
+// https://www.ietf.org/archive/id/draft-ietf-lamps-pq-composite-sigs-04.html#name-rsa4096-pss
+// Which would be around ~28 bytes of CBOR encoding for the RSA4096-PSS.
+#define MAX_ALGORITHM_IDENTIFIER_PARAMETER_BYTES 28
 
 namespace C509 {
     struct AlgorithmIdentifier {
@@ -18,9 +21,11 @@ namespace C509 {
 
             struct {
                 OID algorithm_identifier;
-                optional<bounded_array<uint8_t, MAX_ALGORITHM_IDENTIFIER_PARAMETER_BYTES> > parameters;
+                optional<bounded_array<uint8_t, MAX_ALGORITHM_IDENTIFIER_PARAMETER_BYTES>> parameters;
             } oid_algorithm_identifier;
         };
+
+        std::string to_string() const;
     };
 }
 

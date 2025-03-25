@@ -15,11 +15,15 @@ namespace C509::CSR {
         AlgorithmIdentifier subject_public_key_algorithm;
         PublicKey subject_public_key;
         Extensions extensions_request;
+
+        std::string to_string() const;
     };
 
     struct C509CertificateRequest {
         TBSCertificateRequest tbs_certificate_request;
         SignatureValue subject_signature_value;
+
+        std::string to_string() const;
     };
 }
 

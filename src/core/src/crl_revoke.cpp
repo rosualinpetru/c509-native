@@ -35,14 +35,14 @@ bool crl_revoke(const uint8_t *private_key, size_t private_key_size,
     }
 
     // Parse existing CRL
-    C509::CRL::C509CertificateRevocationList crl;
+    C509::CRL::C509CertificateRevocationList crl{};
     if (cbor_decode(crl_in, crl_in_size, &crl, nullptr) != 0) {
         std::cerr << "Error: Failed to parse existing CRL.\n";
         return false;
     }
 
     // Parse Certificate to revoke
-    C509::C509Certificate cert_to_revoke;
+    C509::C509Certificate cert_to_revoke{};
     if (cbor_decode(cert_in, cert_in_size, &cert_to_revoke, nullptr) != 0) {
         std::cerr << "Error: Failed to parse certificate to revoke.\n";
         return false;

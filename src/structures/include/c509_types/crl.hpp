@@ -17,6 +17,8 @@ namespace C509::CRL {
         CertificateSerialNumber user_certificate;
         Time revocation_date;
         Extensions crl_entry_extensions;
+
+        std::string to_string() const;
     };
 
     struct TBSCertificateRevocationList {
@@ -27,11 +29,15 @@ namespace C509::CRL {
         bounded_array<RevokedCertificate, MAX_REVOKED_CERTIFICATES> revoked_certificates;
         Extensions crl_extensions;
         AlgorithmIdentifier issuer_signature_algorithm;
+
+        std::string to_string() const;
     };
 
     struct C509CertificateRevocationList {
         TBSCertificateRevocationList tbs_certificate_revocation_list;
         SignatureValue issuer_signature_value;
+
+        std::string to_string() const;
     };
 }
 

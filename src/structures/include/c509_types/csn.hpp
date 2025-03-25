@@ -2,6 +2,7 @@
 #define C509_CERTIFICATE_SERIAL_NUMBER_H
 
 #include <cstdint>
+#include <string>
 
 #include "structures.hpp"
 
@@ -11,6 +12,8 @@
 namespace C509 {
     struct CertificateSerialNumber {
         bounded_array<uint8_t, MAX_CSN_BYTES> bytes;
+
+        std::string to_string() const;
     };
 }
 

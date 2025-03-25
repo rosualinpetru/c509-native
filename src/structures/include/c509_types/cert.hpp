@@ -23,11 +23,15 @@ namespace C509 {
         AlgorithmIdentifier subject_public_key_algorithm;
         PublicKey subject_public_key;
         Extensions extensions;
+
+        std::string to_string() const;
     };
 
     struct C509Certificate {
         TBSCertificate tbs_certificate;
         SignatureValue signature_value;
+
+        std::string to_string() const;
     };
 }
 

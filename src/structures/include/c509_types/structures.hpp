@@ -2,6 +2,7 @@
 #define C509_STRUCTURES_H
 
 #include <cstddef>
+#include <string>
 
 template<typename T, size_t N>
 class bounded_array {
@@ -12,64 +13,27 @@ public:
     constexpr bounded_array() = default;
 
     template<size_t M>
-    explicit constexpr bounded_array(const T (&data)[M]) {
-        static_assert(M <= N, "Array size exceeds bounded_array capacity!");
-        copy(data, M);
-    }
+    explicit constexpr bounded_array(const T (&data)[M]);
 
-    constexpr bool copy(const T *data, const size_t size) {
-        if (size > N) return false;
-        for (size_t i = 0; i < size; ++i)
-            elements[i] = data[i];
-        len = size;
-        return true;
-    }
+    constexpr bool copy(const T *data, size_t size);
 
     template<size_t M>
-    constexpr bool copy(const T (&data)[M]) {
-        static_assert(M <= N, "Array size exceeds bounded_array capacity!");
-        return copy(data, M);
-    }
+    constexpr bool copy(const T (&data)[M]);
 
-    constexpr size_t size() const {
-        return len;
-    }
+    constexpr size_t size() const;
+    static constexpr size_t capacity();
+    constexpr void clear();
+    constexpr const T &operator[](size_t index) const;
+    constexpr T &operator[](size_t index);
+    constexpr const T *data() const;
+    constexpr size_t *len_p();
+    constexpr T *data_p();
+    constexpr bool full() const;
+    constexpr bool empty() const;
 
-    static constexpr size_t capacity() {
-        return N;
-    }
-
-    constexpr void clear() {
-        len = 0;
-    }
-
-    constexpr const T &operator[](size_t index) const {
-        return elements[index];
-    }
-
-    constexpr T &operator[](size_t index) {
-        return elements[index];
-    }
-
-    constexpr const T *data() const {
-        return elements;
-    }
-
-    constexpr size_t *len_p() {
-        return &len;
-    }
-
-    constexpr T *data_p() {
-        return elements;
-    }
-
-    constexpr bool full() const {
-        return len == N;
-    }
-
-    constexpr bool empty() const {
-        return len == 0;
-    }
+    std::string to_hex_string(size_t start, size_t length) const;
+    std::string to_hex_string() const;
+    std::string to_utf8_string() const;
 };
 
 template<typename T>
@@ -79,34 +43,15 @@ class optional {
 
 public:
     constexpr optional() = default;
-
-    explicit constexpr optional(const T &v) : has_value(true), value(v) {
-    }
-
-    constexpr void emplace(const T &v) {
-        value = v;
-        has_value = true;
-    }
-
-    constexpr void reset() {
-        has_value = false;
-    }
-
-    constexpr bool has() const {
-        return has_value;
-    }
-
-    constexpr void set_has() {
-        has_value = true;
-    }
-
-    constexpr T &get() {
-        return value;
-    }
-
-    constexpr const T &get() const {
-        return value;
-    }
+    explicit constexpr optional(const T &v);
+    constexpr void emplace(const T &v);
+    constexpr void reset();
+    constexpr bool has() const;
+    constexpr void set_has();
+    constexpr T &get();
+    constexpr const T &get() const;
 };
+
+#include "structures.tpp"
 
 #endif // C509_STRUCTURES_H

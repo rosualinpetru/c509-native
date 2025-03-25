@@ -7,8 +7,8 @@
 
 #include "oid.hpp"
 
-#define MAX_EXTENSION_BYTES 128 // TODO
-#define MAX_EXTENSIONS_LIST_SIZE 32 // TODO
+#define MAX_EXTENSION_BYTES 1024 // Warning: The number of bytes is considered as a worst case scenario.
+#define MAX_EXTENSIONS_LIST_SIZE 30 // https://datatracker.ietf.org/doc/html/rfc5280#section-4.1.2.4, (1..MAX), consider MAX = 30 (number of extensions in the C509 registry)
 
 namespace C509 {
     struct Extension {
@@ -22,6 +22,8 @@ namespace C509 {
             bool critical;
             bounded_array<uint8_t, MAX_EXTENSION_BYTES> extension_value;
         } oidExtension;
+
+        std::string to_string() const;
     };
 
     struct Extensions {
@@ -34,6 +36,8 @@ namespace C509 {
             int64_t mixed_key_usage{};
             bounded_array<Extension, MAX_EXTENSIONS_LIST_SIZE> extensions;
         };
+
+        std::string to_string() const;
     };
 }
 

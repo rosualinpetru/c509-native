@@ -39,21 +39,6 @@ static const std::unordered_map<std::string, std::vector<uint32_t> > supported_c
     {"challengePassword", {1, 2, 840, 113549, 1, 9, 7}}
 };
 
-// Only Hybrid ML_DSA with ECC is considered for now.
-static const std::unordered_map<std::string, std::vector<uint32_t> > supported_cert_algorithms = {
-    {"mldsa44", {2, 16, 840, 1, 101, 3, 4, 3, 17}},
-    {"mldsa65", {2, 16, 840, 1, 101, 3, 4, 3, 18}},
-    {"mldsa87", {2, 16, 840, 1, 101, 3, 4, 3, 19}},
-    {"mldsa44_ed25519", {2, 16, 840, 1, 114027, 80, 8, 1, 3}},
-    {"mldsa44_p256", {2, 16, 840, 1, 114027, 80, 8, 1, 4}},
-    {"mldsa65_ed25519", {2, 16, 840, 1, 114027, 80, 8, 1, 10}},
-    {"mldsa65_p256", {2, 16, 840, 1, 114027, 80, 8, 1, 8}},
-    {"mldsa65_bp256", {2, 16, 840, 1, 114027, 80, 8, 1, 9}},
-    {"mldsa87_ed448", {2, 16, 840, 1, 114027, 80, 8, 1, 13}},
-    {"mldsa87_p384", {2, 16, 840, 1, 114027, 80, 8, 1, 11}},
-    {"mldsa87_bp384", {2, 16, 840, 1, 114027, 80, 8, 1, 12}}
-};
-
 // https://www.ietf.org/archive/id/draft-ietf-cose-cbor-encoded-cert-13.html#section-9.3-2
 static const std::unordered_map<std::string, int> attribute_registry = {
     {"emailaddress", 0}, {"e-mailaddress", 0},

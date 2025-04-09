@@ -4,9 +4,9 @@
 
 std::string C509::Extension::to_string() const {
     std::ostringstream oss;
-    oss << "Id: " << oidExtension.extension_id.to_string()
-            << ", Critical: " << (oidExtension.critical ? "true" : "false")
-            << ", Value: " << oidExtension.extension_value.to_hex_string();
+    oss << "Id: " << oid_extension.extension_id.to_string()
+            << ", Critical: " << (oid_extension.critical ? "true" : "false")
+            << ", Value: " << oid_extension.extension_value.to_hex_string();
     return oss.str();
 }
 
@@ -24,4 +24,16 @@ std::string C509::Extensions::to_string() const {
         oss << "}";
     }
     return oss.str();
+}
+
+std::string C509::KeyUsage::to_string() const {
+    return std::to_string(value);
+}
+
+std::string C509::BasicConstraints::to_string() const {
+    return std::to_string(value);
+}
+
+std::string C509::SubjectKeyIdentifier::to_string() const {
+    return value.to_hex_string();
 }

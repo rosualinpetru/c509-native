@@ -14,6 +14,8 @@ namespace C509 {
 
     DECLARE_CODEC(C509PrivateKey)
 
+    DECLARE_CODEC(PublicKey)
+
     DECLARE_CODEC(C509PEM)
 
     DECLARE_CODEC(COSE_C509)

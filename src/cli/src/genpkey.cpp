@@ -28,17 +28,9 @@ int handle_genpkey(const argparse::ArgumentParser &genpkey_cmd) {
 }
 
 void setup_genpkey_parser(argparse::ArgumentParser &genpkey_cmd) {
-    std::string algorithms;
-    for (const auto &valid_algorithm: supported_cert_algorithms) {
-        if (!algorithms.empty()) {
-            algorithms += ", ";
-        }
-        algorithms += valid_algorithm.first;
-    }
-
     genpkey_cmd.add_argument("-algorithm")
             .required()
-            .help("The public key algorithm (" + algorithms + ")");
+            .help("The public key algorithm (some of the algorithms supported by OQS-provider)");
 
     genpkey_cmd.add_argument("-out")
             .required()

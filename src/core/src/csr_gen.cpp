@@ -114,9 +114,9 @@ bool csr_gen(const uint8_t *private_key, size_t private_key_size,
             const std::string &value = std::get<1>(ext_data);
 
             ext_list.extensions[index].type = C509::Extension::Type::OID;
-            ext_list.extensions[index].oidExtension.extension_id.subids.copy(oid.data(), oid.size());
-            ext_list.extensions[index].oidExtension.critical = critical;
-            ext_list.extensions[index].oidExtension.extension_value.copy(
+            ext_list.extensions[index].oid_extension.extension_id.subids.copy(oid.data(), oid.size());
+            ext_list.extensions[index].oid_extension.critical = critical;
+            ext_list.extensions[index].oid_extension.extension_value.copy(
                 reinterpret_cast<const unsigned char *>(value.data()), value.size());
             index++;
         }

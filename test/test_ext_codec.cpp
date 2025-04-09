@@ -13,9 +13,9 @@ TEST_CASE("Extension Encoding - OID Type") {
     // Input
     Extension ext;
     ext.type = Extension::Type::OID;
-    ext.oidExtension.extension_id.subids.copy({2, 16});
-    ext.oidExtension.critical = true;
-    ext.oidExtension.extension_value.copy({0x12, 0x34, 0x56});
+    ext.oid_extension.extension_id.subids.copy({2, 16});
+    ext.oid_extension.critical = true;
+    ext.oid_extension.extension_value.copy({0x12, 0x34, 0x56});
 
     // Output
     uint8_t out[MAX_EXTENSION_BYTES];
@@ -51,8 +51,8 @@ TEST_CASE("Extension Decoding - OID Type") {
     // Assertions
     REQUIRE(res == ZCBOR_SUCCESS);
     REQUIRE(ext.type == Extension::Type::OID);
-    REQUIRE(ext.oidExtension.critical == false);
-    REQUIRE(ext.oidExtension.extension_value.size() == 2);
+    REQUIRE(ext.oid_extension.critical == false);
+    REQUIRE(ext.oid_extension.extension_value.size() == 2);
 }
 
 TEST_CASE("Extensions Encoding - List Type") {
@@ -62,14 +62,14 @@ TEST_CASE("Extensions Encoding - List Type") {
     *exts.extensions.len_p() = 2;
 
     exts.extensions[0].type = Extension::Type::OID;
-    exts.extensions[0].oidExtension.extension_id.subids.copy({1, 3, 6});
-    exts.extensions[0].oidExtension.critical = false;
-    exts.extensions[0].oidExtension.extension_value.copy({0xAB, 0xCD});
+    exts.extensions[0].oid_extension.extension_id.subids.copy({1, 3, 6});
+    exts.extensions[0].oid_extension.critical = false;
+    exts.extensions[0].oid_extension.extension_value.copy({0xAB, 0xCD});
 
     exts.extensions[1].type = Extension::Type::OID;
-    exts.extensions[1].oidExtension.extension_id.subids.copy({3, 6, 9});
-    exts.extensions[1].oidExtension.critical = true;
-    exts.extensions[1].oidExtension.extension_value.copy({0xDE, 0xF0});
+    exts.extensions[1].oid_extension.extension_id.subids.copy({3, 6, 9});
+    exts.extensions[1].oid_extension.critical = true;
+    exts.extensions[1].oid_extension.extension_value.copy({0xDE, 0xF0});
 
     // Output
     uint8_t out[MAX_EXTENSION_BYTES];
@@ -108,5 +108,5 @@ TEST_CASE("Extensions Decoding - List Type") {
     REQUIRE(res == ZCBOR_SUCCESS);
     REQUIRE(exts.type == Extensions::Type::List);
     REQUIRE(exts.extensions.size() == 1);
-    REQUIRE(exts.extensions[0].oidExtension.critical == false);
+    REQUIRE(exts.extensions[0].oid_extension.critical == false);
 }

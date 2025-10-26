@@ -34,7 +34,6 @@ bool csr_gen(const uint8_t *private_key, size_t private_key_size,
         return false;
     }
 
-    // 🔹 Reconstruct Private Key in OpenSSL
     EVP_PKEY_CTX *pkey_ctx = EVP_PKEY_CTX_new_from_name(oqs_provider_ctx, algorithm_name.c_str(), OQSPROV_PROPQ);
     if (!pkey_ctx) {
         std::cerr << "Error: Failed to create EVP_PKEY_CTX.\n";

@@ -55,9 +55,6 @@ apt-get install toilet
 - `src/`: Main source code.
 - `test/`: Tests for validating encoding and decoding.
 
-## Documentation
-Work in progress.
-
 ## License
 All code is available to you under the MIT license, available at http://opensource.org/licenses/mit-license.php and also in the LICENSE file.
 

@@ -8,7 +8,6 @@ add_executable(c509_tests
         test_time_codec.cpp
         test_name_codec.cpp
         test_ext_codec.cpp
-        create_dummy_cert.cpp
 )
 
 target_link_libraries(c509_tests PUBLIC c509_codec c509_crypto c509_core)

@@ -80,18 +80,10 @@ mkdir -p ./ca
 rm -rf ./client
 mkdir -p ./client
 
-echo -e "\n🔢 Some libraries (like ZCBOR) offer (limited) support for parser generation based on CDDL schemas."
-
-breakpoint
-
-cat $SCRIPT_DIR/resource/c509.cddl.raw
-
-echo -e "\n\n⚙️ Before going further, look into the ./build/gen for the ZCBOR generated codecs for C509."
-
 continue_demo
 
 # Inform the viewer about the CLI interaction
-print_box "📢 This tool has a CLI interface! 🛠️" 0
+print_box "📢 This tool has a CLI interface! 🛠️" -2
 
 echo -e "\n🚀 During this demo, each command will be \033[1;32mdisplayed in green\033[0m before being executed."
 echo -e "📜 This allows you to follow along and see exactly what's happening under the hood.\n"
@@ -108,7 +100,7 @@ run_command "./c509_cli genpkey"
 
 breakpoint
 
-run_command "./c509_cli genpkey -algorithm mldsa87 -out ./ca/ca_key.bin"
+run_command "./c509_cli genpkey -algorithm mldsa44 -out ./ca/ca_key.bin"
 
 breakpoint
 
@@ -140,8 +132,6 @@ breakpoint
 
 run_command "./c509_cli parse -in ./ca/ca_cert.bin"
 
-echo -e "\n🧐 Let's look at the CA files in more detail - going to cbor.me."
-
 continue_demo
 
 print_box "📜 Client" -1
@@ -150,7 +140,7 @@ print_hr
 
 breakpoint
 
-run_command "./c509_cli genpkey -algorithm mldsa87_ed448 -out ./client/client_key.bin"
+run_command "./c509_cli genpkey -algorithm mldsa44 -out ./client/client_key.bin"
 
 breakpoint
 
@@ -175,29 +165,6 @@ run_command "ls -l ./client"
 breakpoint
 
 run_command "./c509_cli parse -in ./client/client_cert.bin"
-
-echo -e "\n🔍 Let's look at the client files in more detail - going to cbor.me."
-
-continue_demo
-
-print_box "🛍️ Certificate Bundle" -1
-print_subsection "Create a bundle with the CA and client certificate"
-
-breakpoint
-
-run_command "./c509_cli bundle"
-
-breakpoint
-
-run_command "./c509_cli bundle  -out ./client/bundle.bin -in ./ca/ca_cert.bin ./client/client_cert.bin"
-
-breakpoint
-
-run_command "./c509_cli bundle -out ./client/bundle_compressed.bin -compressed -in ./ca/ca_cert.bin ./client/client_cert.bin"
-
-breakpoint
-
-run_command "ls -l ./client"
 
 continue_demo
 
@@ -227,24 +194,24 @@ run_command "./c509_cli parse -in ./ca/crl.updated.bin"
 
 continue_demo
 
-print_box "☑️ We also have tests" -2
-print_hr
+# print_box "☑️ We also have tests" -3
+# print_hr
 
-cd $SCRIPT_DIR/build/test/
+# cd $SCRIPT_DIR/build/test/
 
-breakpoint
+# breakpoint
 
-run_command "./c509_tests"
+# run_command "./c509_tests"
 
-echo -e "\n🚀 Tests were really executed. They mostly focus on correct encoding and decoding of frequently used structures."
+# echo -e "\n🚀 Tests were really executed. They mostly focus on correct encoding and decoding of frequently used structures."
 
-continue_demo
+# continue_demo
 
 echo -e ""
-echo "✨✨ THANK YOU FOR YOUR ATTENTION! ✨✨" | toilet -f wideterm -F border | lolcat
+echo "           THANK YOU!          " | toilet -f wideterm -F border | lolcat
 echo -e "\033[0m"
 printf "              \033[1;32m║ %s ║\033[0m\n" "🎉 Hope you enjoyed the demo! 🙌"
-echo "   Questions? " | toilet -f smmono9 -F metal
+echo "     C 509" | toilet -f smmono9 -F metal
 echo -e "                       Alin-Petru \e[31mRosu\e[0m"
 echo -e "                  rosualinpetru@gmail.com"
 

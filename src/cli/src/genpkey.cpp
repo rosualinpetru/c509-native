@@ -30,7 +30,7 @@ int handle_genpkey(const argparse::ArgumentParser &genpkey_cmd) {
 void setup_genpkey_parser(argparse::ArgumentParser &genpkey_cmd) {
     genpkey_cmd.add_argument("-algorithm")
             .required()
-            .help("The public key algorithm (some of the algorithms supported by OQS-provider)");
+            .help("The public key algorithm (ML-DSA / ML-KEM versions supported by OQS-provider)");
 
     genpkey_cmd.add_argument("-out")
             .required()
